@@ -1,16 +1,10 @@
 import React from 'react'
-import Sidebar from './components/sidebar/Sidebar'
-import Header from './components/header/Header'
+import Main from './components/main/Main'
 
 const App = () => {
   return (
-    <div>
-      <div>
-      <Header/>
-      </div>
-      <div>
-      <Sidebar/>
-      </div>
+    <div className ='bg-[#27272B]'>
+      <Main/>
     </div>
   )
 }
