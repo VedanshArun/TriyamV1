@@ -19,6 +19,7 @@ import Users from '../users/Users';
 import FacilityMap from '../facilityMap/FacilityMap';
 import DownloadData from '../downloadData/DownloadData';
 import GeneratePass from '../pass/GeneratePass';
+import bss_logo from '../../assets/bss_logo.png';
 
 
 const components = {
@@ -45,10 +46,10 @@ const Main = () => {
       <nav class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
           <div class="flex flex-wrap justify-between items-center">
             <div class="flex justify-start items-center">
-              <a href="https://flowbite.com" class="flex items-center justify-between mr-4">
+              <a href="https://flowbite.com" class="flex items-center justify-center mr-4">
                 <img
-                  src="https://flowbite.s3.amazonaws.com/logo.svg"
-                  class="mr-3 h-8"
+                  src={bss_logo}
+                  class="mr-3 h-7"
                   alt="Flowbite Logo"
                 />
                 <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">Triyam Dashboard</span>
