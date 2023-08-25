@@ -1,65 +1,35 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, {useState, useRef, useEffect} from 'react'
-import mapboxgl from 'mapbox-gl'
+import api from '../../api';
 
-
-mapboxgl.accessToken = 'pk.eyJ1IjoidmFyeCIsImEiOiJjbGt3Yzh4Zm0wOWMxM2VuN3ZxaW55a2F4In0.Bs9rrglpWLzB-3MuKtzufw'
 
 const Zones = () => {
 
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-  const [lng, setLng] = useState(77.05285028284152);
-  const [lat, setLat] = useState(28.473559858966844);
-  const [zoom, setZoom] = useState(13);
-  const dummyData = [
-    {
-        zoneID : '6492ea79a2644abc341def7e',
-        zoneName : 'Balcony',
-        zoneDescription : 'cameras in balcony',
-        zoneCameras : ['Camera 2'],
-        zoneLatitude : 28.473229771842615, 
-        zoneLongitude : 77.05188468761884,
-    },
-    {
-      zoneID : '6492ea79a2644abc341def7e',
-      zoneName : 'Balcony',
-      zoneDescription : 'cameras in balcony',
-      zoneCameras : ['Camera 1'],
-      zoneLatitude : 28.473229771842615, 
-      zoneLongitude : 77.05188468761884,
-  },
-  {
-    zoneID : '6492ea79a2644abc341def7e',
-    zoneName : 'Balcony',
-    zoneDescription : 'cameras in balcony',
-    zoneCameras : ['Camera 1'],
-    zoneLatitude : 28.473229771842615, 
-    zoneLongitude : 77.05188468761884,
-},
-{
-  zoneID : '6492ea79a2644abc341def7e',
-  zoneName : 'Balcony',
-  zoneDescription : 'cameras in balcony',
-  zoneCameras : ['Camera 2'],
-  zoneLatitude : 28.473229771842615, 
-  zoneLongitude : 77.05188468761884,
-},
-    
-]
+    const [zones, setZones] = useState([]);
+    const loadZones = async () => {
+        const fetchedZones = await api.fetchZones() ; 
+        setZones(
+            fetchedZones.map((zone) => {
+                return {
+                    zoneID : zone.id , 
+                    name : zone.name ,
+                    numCameras : zone.numCameras , 
+                    description : zone.description , 
+                };
+            })
+        );
+    };
 
-  useEffect(() => {
-    if (map.current) return; // initialize map only once
-    map.current = new mapboxgl.Map({
-    container: mapContainer.current,
-    style: 'mapbox://styles/varx/clkwbuz04003o01pi961ahfef',
-    center: [lng, lat],
-    zoom: zoom
-    });
-  });
+    useEffect(()=> {
+        (async () => {
+            await loadZones();
+        })();
+    },[]);
+
 
   return (
     <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
-      <div ref={mapContainer} className="map-container" />
       <div class="mt-8">
         <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
           <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
@@ -144,20 +114,17 @@ const Zones = () => {
                                 <th scope="col" class="px-4 py-3">zone id</th>
                                 <th scope="col" class="px-2 py-3">Name</th>
                                 <th scope="col" class="px-2 py-3">Description</th>
-                                <th scope="col" class="px-2 py-3">cameras</th>
-                                <th scope="col" class="px-2 py-3">Latitude</th>
-                                <th scope="col" class="px-2 py-3">Longitude</th>    
+                                <th scope="col" class="px-2 py-3">Number of Cameras</th>
+                                <th scope="col" class="px-2 py-3">preview</th>   
                             </tr>
                         </thead>
                         <tbody>
-                            {dummyData.map((zone) => (
+                            {zones.map((zone) => (
                                 <tr class="border-b dark:border-gray-700">
                                     <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{zone.zoneID}</th>
-                                    <td class="px-2 py-3">{zone.zoneName}</td>
-                                    <td class="px-2 py-3">{zone.zoneDescription}</td>
-                                    <td class="px-4 py-3">{zone.zoneCameras}</td>
-                                    <td class="px-4 py-3">{zone.zoneLatitude}</td>
-                                    <td class="px-4 py-3">{zone.zoneLongitude}</td>
+                                    <td class="px-2 py-3">{zone.name}</td>
+                                    <td class="px-2 py-3">{zone.description}</td>
+                                    <td class="px-4 py-3">{zone.numCameras}</td>
                                     <td class="px-4 py-3 flex items-center justify-end">
                                         <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

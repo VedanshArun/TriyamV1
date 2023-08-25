@@ -1,8 +1,10 @@
-const baseUrl = 'http://192.168.29.183:3000';
+/* eslint-disable eqeqeq */
+// const baseUrl = 'http://192.168.29.182:3000';
+const baseUrl = 'http://localhost:3000';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
-  getZones: async function () {
+  fetchZones: async function () {
     let resp = await apicall({
       url: `${baseUrl}/admin/zones`,
       method: 'GET',
@@ -15,7 +17,7 @@ export default {
       data: { name, description },
     });
     return resp.data;
-  },
+  },  
   getRtspUrls: async function () {
     let resp = await apicall({
       url: `${baseUrl}/admin/rtsp/links`,
@@ -37,19 +39,19 @@ export default {
     });
     return resp.data;
   },
-  getFeeds: async function () {
+  fetchFeeds: async function () {
     let resp = await apicall({
       url: `${baseUrl}/admin/feeds`,
       method: 'GET',
     });
     return resp.data;
   },
-  getAlerts: async function () {
+  fetchAlerts : async function () {
     let resp = await apicall({
-      url: `${baseUrl}/admin/alerts/filter`,
-      method: 'POST',
+      url : `${baseUrl}//admin/alerts/filter`,
+      method : 'POST',
     });
-    return resp.data;
+    return resp.data ; 
   },
 
   addFeed: async function ({ rtspUrl, zoneId, cameraName, description }) {
@@ -68,12 +70,10 @@ export default {
     return resp.data;
   },
 
-  addUser: async ({ file, name, zones }) => {
+  addUser: async ({ file }) => {
     let resp = await apiCallMediaUpload({
       url: `${baseUrl}/admin/upload-face`,
       multipartData: file,
-      name : name , 
-      zoneIds : zones,
     });
 
     return resp.data;
@@ -81,21 +81,22 @@ export default {
 };
 
 async function apiCallMediaUpload(
-  { method = 'POST', url, name , zoneIds, multipartData },
+  { method = 'POST', url, data = null, multipartData },
   token
 ) {
   try {
     var formData = new FormData();
     //formData.append("name", "Vedansh");
     formData.append('image', multipartData);
-    console.log(zoneIds);
+    const zoneIds = ['6492eafca2644abc341def9f'];
     formData.append('zoneIds', JSON.stringify(zoneIds));
     console.log({
       uri: multipartData,
       type: multipartData.type,
       name: multipartData.name,
     });
-    formData.append('name', name);
+    formData.append('name', 'test');
+    console.log(formData);
     let resp = await fetch(url, {
       method: method,
       headers: {
