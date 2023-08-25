@@ -1,6 +1,7 @@
 /* eslint-disable eqeqeq */
 // const baseUrl = 'http://192.168.29.182:3000';
-const baseUrl = 'http://localhost:3000';
+const baseUrl =
+  'https://dd01-2405-201-4028-5811-fc87-6ab5-299a-9ee8.ngrok-free.app';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
@@ -17,7 +18,7 @@ export default {
       data: { name, description },
     });
     return resp.data;
-  },  
+  },
   getRtspUrls: async function () {
     let resp = await apicall({
       url: `${baseUrl}/admin/rtsp/links`,
@@ -46,12 +47,12 @@ export default {
     });
     return resp.data;
   },
-  fetchAlerts : async function () {
+  fetchAlerts: async function () {
     let resp = await apicall({
-      url : `${baseUrl}//admin/alerts/filter`,
-      method : 'POST',
+      url: `${baseUrl}//admin/alerts/filter`,
+      method: 'POST',
     });
-    return resp.data ; 
+    return resp.data;
   },
 
   addFeed: async function ({ rtspUrl, zoneId, cameraName, description }) {
@@ -82,7 +83,7 @@ export default {
 
 async function apiCallMediaUpload(
   { method = 'POST', url, data = null, multipartData },
-  token
+  token = localStorage.getItem('token')
 ) {
   try {
     var formData = new FormData();
@@ -119,7 +120,10 @@ async function apiCallMediaUpload(
   }
 }
 
-async function apicall({ method = 'POST', url, data = null }, token) {
+async function apicall(
+  { method = 'POST', url, data = null },
+  token = localStorage.getItem('token')
+) {
   try {
     let resp = await fetch(url, {
       method: method,
