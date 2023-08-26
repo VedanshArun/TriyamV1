@@ -1,8 +1,50 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
+import { Button, Modal } from 'flowbite-react';
 import api from '../../api';
 
 const Cameras = () => {
+  const [openModal, setOpenModal] = useState('');
+  const props = { openModal, setOpenModal };
+  const [camName, setCamName] = useState(null);
+  const [currentZone, setCurrentZone] = useState(null);
+  const [currentRtspLink, setCurentRtspLink] = useState(null);
+  const [camDescription, setCamDescription] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [rtspLinks, setRtspLinks] = useState([]);
+  const [zones, setZones] = useState([]);
   const [cameras, setCameras] = useState([]);
+
+  const getZones = async () => {
+    const data = await api.fetchZones();
+    setZones(
+      data.map((zone) => {
+        return {
+          zoneID: zone._id,
+          name: zone.name,
+        };
+      })
+    );
+  };
+  const getRtspLinks = async () => {
+    const data = await api.getRtspUrls();
+    setRtspLinks(
+      data.map((val) => {
+        return val;
+      })
+    );
+  };
+
+  const scanRtspLinks = async () => {
+    const data = await api.scanRtspLinks({ username, password });
+    setRtspLinks(
+      data.map((val) => {
+        return val;
+      })
+    );
+  };
+
   const loadCameras = async () => {
     const fetchedCameras = await api.fetchFeeds();
     setCameras(
@@ -92,9 +134,14 @@ const Cameras = () => {
                     </a>
                   </div>
                 </div>
-                <button
+                <Button
+                  onClick={() => {
+                    getRtspLinks();
+                    getZones();
+                    props.setOpenModal('default');
+                  }}
                   type="button"
-                  class="flex items-center justify-center px-4 py-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
+                  class="flex items-center justify-center px-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
                 >
                   <svg
                     class="h-3.5 w-3.5 mr-2"
@@ -109,8 +156,169 @@ const Cameras = () => {
                       d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
                     />
                   </svg>
-                  Add new zone
-                </button>
+                  Add new camera
+                </Button>
+                <Modal
+                  show={props.openModal === 'default'}
+                  onClose={() => props.setOpenModal(undefined)}
+                >
+                  <Modal.Header>Add a new camera</Modal.Header>
+                  <Modal.Body>
+                    <div class="grid gap-4 mb-4 sm:grid-cols-2 sm:gap-6 sm:mb-5">
+                      <div class="sm:col-span-2">
+                        <label
+                          for="name"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          Camera Name
+                        </label>
+                        <input
+                          type="text"
+                          name="cameraName"
+                          id="cameraName"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          placeholder="Enter camera name"
+                          required=""
+                          onChange={(data) => setCamName(data.target.value)}
+                        ></input>
+                      </div>
+                      <div class="sm:col-span-2">
+                        <label
+                          for="category"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          Select Zone
+                        </label>
+                        <select
+                          id="category"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          onChange={(data) => setCurrentZone(data.target.value)}
+                        >
+                          {zones.map((zone) => {
+                            return (
+                              <option selected="" value={zone.name}>
+                                {zone.name}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div class="sm:col-span-2">
+                        <label
+                          for="category"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          Select RTSP Link
+                        </label>
+                        <select
+                          id="category"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        >
+                          {rtspLinks.map((link) => {
+                            return <option value={link}>{link}</option>;
+                          })}
+                        </select>
+                      </div>
+                      <div class=" flex items-center sm:col-span-2">
+                        <p className="text-sm mr-2">
+                          Scan for new RTSP Links ?
+                        </p>
+                      </div>
+                      <div class=" flex items-center sm:col-span-2">
+                        <p className="text-md text-bold mr-2">
+                          Camera login details :
+                        </p>
+                      </div>
+
+                      <div class="sm:col-span-2 grid gap-4 mb-2 sm:grid-cols-2 justify-center items-center">
+                        <div>
+                          <label
+                            for="name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Username
+                          </label>
+                          <input
+                            type="text"
+                            name="name"
+                            id="name"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter username"
+                          ></input>
+                        </div>
+                        <div>
+                          <label
+                            for="brand"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Password
+                          </label>
+                          <input
+                            type="password"
+                            name="brand"
+                            id="brand"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter password"
+                          ></input>
+                        </div>
+                        <div className="mt-3">
+                          <Button color="gray">Scan RTSPs</Button>
+                        </div>
+                      </div>
+                      <div class="sm:col-span-2">
+                        <label
+                          for="category"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          New RTSP Links found :
+                        </label>
+                        <select
+                          id="category"
+                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        >
+                          {rtspLinks.map((link) => {
+                            return (
+                              <option selected="" value={link}>
+                                {link}
+                              </option>
+                            );
+                          })}
+                        </select>
+                      </div>
+                      <div class="sm:col-span-2">
+                        <label
+                          for="description"
+                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        >
+                          Description
+                        </label>
+                        <textarea
+                          id="description"
+                          rows="5"
+                          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          placeholder="Write a description..."
+                          onChange={(data) =>
+                            setCamDescription(data.target.value)
+                          }
+                        ></textarea>
+                      </div>
+                    </div>
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      className="bg-blue-700"
+                      onClick={() => props.setOpenModal(undefined)}
+                    >
+                      Add
+                    </Button>
+                    <Button
+                      color="gray"
+                      onClick={() => props.setOpenModal(undefined)}
+                    >
+                      Cancel
+                    </Button>
+                  </Modal.Footer>
+                </Modal>
                 <button
                   id="filterDropdownButton"
                   data-dropdown-toggle="filterDropdown"
