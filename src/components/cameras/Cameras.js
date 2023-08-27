@@ -6,6 +6,7 @@ import api from '../../api';
 const Cameras = () => {
   const [openModal, setOpenModal] = useState('');
   const props = { openModal, setOpenModal };
+  const [scanNew, setScanNew] = useState(false);
   const [camName, setCamName] = useState(null);
   const [currentZone, setCurrentZone] = useState(null);
   const [currentRtspLink, setCurentRtspLink] = useState(null);
@@ -43,6 +44,7 @@ const Cameras = () => {
         return val;
       })
     );
+    
   };
 
   const loadCameras = async () => {
@@ -203,34 +205,22 @@ const Cameras = () => {
                           })}
                         </select>
                       </div>
-                      <div class="sm:col-span-2">
-                        <label
-                          for="category"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Select RTSP Link
-                        </label>
-                        <select
-                          id="category"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        >
-                          {rtspLinks.map((link) => {
-                            return <option value={link}>{link}</option>;
-                          })}
-                        </select>
-                      </div>
+                     
                       <div class=" flex items-center sm:col-span-2">
                         <p className="text-sm mr-2">
                           Scan for new RTSP Links ?
                         </p>
+                        <button onClick = {() => setScanNew(true)}><p>Yes</p></button>
+                        <button className = "ml-3" onClick = {() => setScanNew(false)}><p>No</p></button>
                       </div>
-                      <div class=" flex items-center sm:col-span-2">
+                      {scanNew ?
+                          <>
+                            <div class=" flex items-center sm:col-span-2">
                         <p className="text-md text-bold mr-2">
                           Camera login details :
                         </p>
-                      </div>
-
-                      <div class="sm:col-span-2 grid gap-4 mb-2 sm:grid-cols-2 justify-center items-center">
+                            </div>
+                            <div class="sm:col-span-2 grid gap-4 mb-2 sm:grid-cols-2 justify-center items-center">
                         <div>
                           <label
                             for="name"
@@ -264,7 +254,10 @@ const Cameras = () => {
                         <div className="mt-3">
                           <Button color="gray">Scan RTSPs</Button>
                         </div>
-                      </div>
+                            </div>
+                          </> : <p></p>
+                      }
+                     
                       <div class="sm:col-span-2">
                         <label
                           for="category"
