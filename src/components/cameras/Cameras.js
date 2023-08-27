@@ -7,7 +7,6 @@ const Cameras = () => {
   const [openModal, setOpenModal] = useState('');
   const props = { openModal, setOpenModal };
   const [scanNew, setScanNew] = useState(false);
-  const [scanNew, setScanNew] = useState(false);
   const [camName, setCamName] = useState(null);
   const [currentZone, setCurrentZone] = useState(null);
   const [currentRtspLink, setCurentRtspLink] = useState(null);
