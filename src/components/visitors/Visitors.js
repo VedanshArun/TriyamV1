@@ -1,11 +1,40 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react'
-
-
-
-
+import React , {useState, useEffect} from 'react';
+import api from '../../api';
 
 const Visitors = () => {
+    const [users,setUsers] = useState([]);
+    const loadUsers = async () => {
+        const data = await api.getUsers();
+        setUsers(
+          data.map((user) => {
+            if(user.type === 'VISITOR'){
+                return {
+                    id: user._id,
+                    name: user.name,
+                    images: user.images,
+                    mobile: user.mobile,
+                    gatePasses : user.gatePasses.map((gatePass) => {
+                        return {
+                            id : gatePass._id , 
+                            userID : gatePass.userId,
+
+                        }
+                    }),
+                    expiryDate : user.expiryDate,
+                    companyName : user.companyName,
+
+                  };
+            } 
+          })
+        );
+      };
+      useEffect(() => {
+        (async () => {
+          await loadUsers();
+        })();
+      }, []);
+
     const dummyData = [
         {
             visitorID : 'x687s2nj',
@@ -220,21 +249,20 @@ const Visitors = () => {
                             <tr>
                                 <th scope="col" class="px-4 py-3">visitor id</th>
                                 <th scope="col" class="px-2 py-3">Name</th>
-                                <th scope="col" class="px-2 py-3">visiting officer</th>
-                                <th scope="col" class="px-2 py-3">visitor type</th>
-                                <th scope="col" class="px-2 py-3">entry time</th>
-                                <th scope="col" class="px-2 py-3">exit time</th>    
+                                <th scope="col" class="px-2 py-3">Mobile</th>
+                                <th scope="col" class="px-2 py-3">Company Name</th>
+                                <th scope="col" class="px-2 py-3">expiry Date</th> 
                             </tr>
                         </thead>
                         <tbody>
-                            {dummyData.map((visitor) => (
+                            {users.map((visitor) => (
                                 <tr class="border-b dark:border-gray-700">
-                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{visitor.visitorID}</th>
-                                    <td class="px-2 py-3">{visitor.visitorName}</td>
-                                    <td class="px-2 py-3">{visitor.visitingOfficer}</td>
-                                    <td class="px-4 py-3">{visitor.visitorType}</td>
-                                    <td class="px-4 py-3">{visitor.entryTime}</td>
-                                    <td class="px-4 py-3">{visitor.exitTime}</td>
+                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{visitor.id}</th>
+                                    <td class="px-2 py-3">{visitor.name}</td>
+                                    <td class="px-2 py-3">{visitor.mobile}</td>
+                                    <td class="px-4 py-3">{visitor.companyName}</td>
+                                    <td class="px-4 py-3">{visitor.expiryDate}</td>
+                                
                                     <td class="px-4 py-3 flex items-center justify-end">
                                         <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

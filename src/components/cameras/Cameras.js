@@ -1,7 +1,8 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal } from 'flowbite-react';
 import api from '../../api';
+import JSMpeg from '@cycjimmy/jsmpeg-player';
 
 const Cameras = () => {
   const [openModal, setOpenModal] = useState('');
@@ -16,6 +17,8 @@ const Cameras = () => {
   const [rtspLinks, setRtspLinks] = useState([]);
   const [zones, setZones] = useState([]);
   const [cameras, setCameras] = useState([]);
+  const canvasRef = useRef(null);
+  let player = null ; 
 
   const getZones = async () => {
     const data = await api.fetchZones();
@@ -28,6 +31,7 @@ const Cameras = () => {
       })
     );
   };
+
   const getRtspLinks = async () => {
     const data = await api.getRtspUrls();
     setRtspLinks(
@@ -39,11 +43,11 @@ const Cameras = () => {
 
   const scanRtspLinks = async () => {
     const data = await api.scanRtspLinks({ username, password });
-    // setRtspLinks(
-    //   data.map((val) => {
-    //     return val;
-    //   })
-    // );
+    setRtspLinks(
+      data.map((val) => {
+        return val;
+      })
+    );
     
   };
 
@@ -62,7 +66,6 @@ const Cameras = () => {
     );
   };
   const handleOk = async () => {
-    console.log(currentRtspLink);
     await api.addFeed({
       rtspUrl: currentRtspLink,
       zoneId: currentZone,
@@ -71,6 +74,28 @@ const Cameras = () => {
     });
     await loadCameras();
   };
+
+  const startStream = function (url) {
+    try {
+      if (url) {
+        console.log(url);
+        (async () => {
+          if (player && player.stop) {
+            player.stop();
+          }
+          const wsLink = await api.getStreamLink({ rtspLink: url });
+          player = new JSMpeg.Player(wsLink, {
+            canvas: document.getElementById('canvas'),
+            videoBufferSize: 1024 * 1024 * 16,
+          });
+        })();
+      }
+      return <a></a>;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 
   useEffect(() => {
     (async () => {
@@ -206,7 +231,6 @@ const Cameras = () => {
                         setScanNew(false);
                         setUsername(null);
                         setPassword(null);
-                        getZones();
                       }}
                     >
                       Cancel
@@ -271,16 +295,17 @@ const Cameras = () => {
                           Select RTSP Link
                         </label>
                         <select
-                        defaultValue="Select RTSP Link"
+                        
                           id="rtsp"
-                          onChange={(data) => setCurrentRtspLink(data.target.value)}
+                          onChange={(data) => {
+                            startStream("rtsp://admin:admin@192.168.29.117:554/unicaststream/1");
+                            setCurrentRtspLink(data.target.value)}}
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         >
                           {rtspLinks.map((link) => {
                             return <option value={link}>{link}</option>;
                           })}
                         </select>
-                        
                       </div>
                       
                       <div class="sm:col-span-6">
@@ -299,6 +324,15 @@ const Cameras = () => {
                           required=""
                           onChange={(data) => setCamDescription(data.target.value)}
                         ></input>
+                      </div>
+                      <div class="sm:col-span-6">
+                      <canvas
+                  id="canvas"
+                  ref={canvasRef}
+                  className='ml-auto mr-auto w-[300px] h-[300px]'
+              
+                />
+                       
                       </div>
                     </div>
                   </Modal.Body>
@@ -319,7 +353,7 @@ const Cameras = () => {
                         setCamDescription(null);
                         setPassword(null);
                         setCurrentZone(null);
-                        setCurrentRtspLink(null);
+                        setCurrentRtspLink(null)
                         props.setOpenModal(undefined)}}
                     >
                       Cancel
@@ -412,7 +446,7 @@ const Cameras = () => {
               </div>
             </div>
           </div>
-          <div class="overflow-x-auto mb-10">
+          <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
@@ -502,7 +536,106 @@ const Cameras = () => {
               </tbody>
             </table>
           </div>
-         
+          <nav
+            class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4"
+            aria-label="Table navigation"
+          >
+            <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
+              Showing
+              <span class="ml-2 mr-2 font-semibold text-gray-900 dark:text-white">
+                1-10
+              </span>
+              of
+              <span class="ml-2 font-semibold text-gray-900 dark:text-white">
+                1000
+              </span>
+            </span>
+            <ul class="inline-flex items-stretch -space-x-px">
+              <li>
+                <a
+                  href="#"
+                  class="flex items-center justify-center h-full py-1.5 px-3 ml-0 text-gray-500 bg-white rounded-l-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  <span class="sr-only">Previous</span>
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewbox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  1
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  2
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  aria-current="page"
+                  class="flex items-center justify-center text-sm z-10 py-2 px-3 leading-tight text-primary-600 bg-primary-50 border border-primary-300 hover:bg-primary-100 hover:text-primary-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
+                >
+                  3
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  ...
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="flex items-center justify-center text-sm py-2 px-3 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  100
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#"
+                  class="flex items-center justify-center h-full py-1.5 px-3 leading-tight text-gray-500 bg-white rounded-r-lg border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
+                >
+                  <span class="sr-only">Next</span>
+                  <svg
+                    class="w-5 h-5"
+                    aria-hidden="true"
+                    fill="currentColor"
+                    viewbox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </a>
+              </li>
+            </ul>
+          </nav>
         </div>
       </div>
     </section>

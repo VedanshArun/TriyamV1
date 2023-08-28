@@ -117,7 +117,7 @@ const Main = () => {
                             </a>
                         </li>
                         <li>
-                            <a href="#" onClick={() => handleMenuClick(6)} class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                            <a href="#" onClick={() => handleMenuClick(7)} class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                 <div className='inline-flex justify-center items-center'>
                                     <AiOutlineAlert className='h-5 w-5'/>
                                     <span class="ml-3">Alerts</span>
