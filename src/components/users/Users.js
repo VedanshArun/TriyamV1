@@ -1,11 +1,21 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, Checkbox, Label, TextInput  } from 'flowbite-react';
+import { Button, Modal, Checkbox, Label, TextInput } from 'flowbite-react';
 import api from '../../api';
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [openModal, setOpenModal] = useState('');
+  const [name, setName] = useState('');
+  const [mobile, setMobile] = useState('');
+  const [zoneIds, setZoneIds] = useState([]);
+  const [aadhaarNumber, setAadhaarNumber] = useState('');
+  const [email, setEmail] = useState('');
+  const [vehicles, setVehicles] = useState([]);
+  const [address, setAddress] = useState('');
+  const [type, setType] = useState('');
+  const [designation, setDesignation] = useState('');
+  const [zones, setZones] = useState([]);
   const props = { openModal, setOpenModal };
   const loadUsers = async () => {
     const data = await api.getUsers();
@@ -17,7 +27,7 @@ const Users = () => {
           zones: user.zones,
           images: user.images,
           aadhaarNumber: user.aadhaarNumber,
-          vehicles : user.vehicles,
+          vehicles: user.vehicles,
           mobile: user.mobile,
           email: user.email,
           designation: user.designation,
@@ -26,9 +36,21 @@ const Users = () => {
       })
     );
   };
+  const getZones = async () => {
+    const data = await api.fetchZones();
+    setZones(
+      data.map((zone) => {
+        return {
+          zoneID: zone._id,
+          name: zone.name,
+        };
+      })
+    );
+  };
   useEffect(() => {
     (async () => {
       await loadUsers();
+      await getZones();
     })();
   }, []);
 
@@ -67,168 +89,157 @@ const Users = () => {
                 Add new user
               </Button>
               <Modal
-                  position='top-center'
-                  show={props.openModal === 'placement'}
-                  onClose={() => props.setOpenModal(undefined)}
-                >
-                  <Modal.Header>Add a new user</Modal.Header>
-                  <Modal.Body>
-                    <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
-                      <div class="sm:col-span-3">
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Full name
-                        </label>
-                        <input
-                          type="text"
-                          name="cameraName"
-                          id="cameraName"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Enter name of the user"
-                          required=""
-                          
-                        ></input>
-                      </div>
-                      <div class="sm:col-span-3">
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Aadhaar Number
-                        </label>
-                        <input
-                          type="text"
-                          name="cameraName"
-                          id="cameraName"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Enter aadhaar number"
-                          required=""
-                          
-                        ></input>
-                      </div>
-                      <div class="sm:col-span-3">
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Phone Number
-                        </label>
-                        <input
-                          type="number"
-                          name="cameraName"
-                          id="cameraName"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="mobile number"
-                          required=""
-                          
-                        ></input>
-                      </div>
-                      <div class="sm:col-span-3">
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Email
-                        </label>
-                        <input
-                          type="text"
-                          name="cameraName"
-                          id="cameraName"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Email address"
-                          required=""
-                          
-                        ></input>
-                      </div>
-                      <div class="sm:col-span-3">
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Vehicle Number
-                        </label>
-                        <input
-                          type="text"
-                          name="cameraName"
-                          id="cameraName"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="vehicle number"
-                          required=""
-                          
-                        ></input>
-                      </div>
-                      <div class="sm:col-span-3">
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Designation
-                        </label>
-                        <input
-                          type="text"
-                          name="cameraName"
-                          id="cameraName"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Designation"
-                          required=""
-                          
-                        ></input>
-                      </div>
-                      <div class="sm:col-span-6">
-                        <label
-                          for="category"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Select Zone
-                        </label>
-                        <select
-                          id="category"
-                          defaultValue={""}
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          
-                        >
-                         
-                        </select>
-                      </div>
-                      <div class="sm:col-span-6">
-                        <label
-                          for="name"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Address
-                        </label>
-                        <input
-                          type="text"
-                          name="cameraName"
-                          id="cameraName"
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          placeholder="Enter address of the user"
-                          required=""
-                          
-                        ></input>
-                      </div>
+                position="top-center"
+                show={props.openModal === 'placement'}
+                onClose={() => props.setOpenModal(undefined)}
+              >
+                <Modal.Header>Add a new user</Modal.Header>
+                <Modal.Body>
+                  <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
+                    <div class="sm:col-span-3">
+                      <label
+                        for="name"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Full name
+                      </label>
+                      <input
+                        type="text"
+                        name="cameraName"
+                        id="cameraName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Enter name of the user"
+                        required=""
+                      ></input>
                     </div>
-                  </Modal.Body>
-                  <Modal.Footer>
-                    <Button
-                      className="bg-blue-700"
-                      onClick={() => {
-                    
-                        props.setOpenModal(undefined);
-                      }}
-                    >
-                      Add
-                    </Button>
-                    <Button
-                      color="gray"
-                      onClick={() => props.setOpenModal(undefined)}
-                    >
-                      Cancel
-                    </Button>
-                  </Modal.Footer>
-                </Modal>
+                    <div class="sm:col-span-3">
+                      <label
+                        for="name"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Aadhaar Number
+                      </label>
+                      <input
+                        type="text"
+                        name="cameraName"
+                        id="cameraName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Enter aadhaar number"
+                        required=""
+                      ></input>
+                    </div>
+                    <div class="sm:col-span-3">
+                      <label
+                        for="name"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Phone Number
+                      </label>
+                      <input
+                        type="number"
+                        name="cameraName"
+                        id="cameraName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="mobile number"
+                        required=""
+                      ></input>
+                    </div>
+                    <div class="sm:col-span-3">
+                      <label
+                        for="name"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Email
+                      </label>
+                      <input
+                        type="text"
+                        name="cameraName"
+                        id="cameraName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Email address"
+                        required=""
+                      ></input>
+                    </div>
+                    <div class="sm:col-span-3">
+                      <label
+                        for="name"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Vehicle Number
+                      </label>
+                      <input
+                        type="text"
+                        name="cameraName"
+                        id="cameraName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="vehicle number"
+                        required=""
+                      ></input>
+                    </div>
+                    <div class="sm:col-span-3">
+                      <label
+                        for="name"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Designation
+                      </label>
+                      <input
+                        type="text"
+                        name="cameraName"
+                        id="cameraName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Designation"
+                        required=""
+                      ></input>
+                    </div>
+                    <div class="sm:col-span-6">
+                      <label
+                        for="category"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Select Zone
+                      </label>
+                      <select
+                        id="category"
+                        defaultValue={''}
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                      ></select>
+                    </div>
+                    <div class="sm:col-span-6">
+                      <label
+                        for="name"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                      >
+                        Address
+                      </label>
+                      <input
+                        type="text"
+                        name="cameraName"
+                        id="cameraName"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                        placeholder="Enter address of the user"
+                        required=""
+                      ></input>
+                    </div>
+                  </div>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button
+                    className="bg-blue-700"
+                    onClick={() => {
+                      props.setOpenModal(undefined);
+                    }}
+                  >
+                    Add
+                  </Button>
+                  <Button
+                    color="gray"
+                    onClick={() => props.setOpenModal(undefined)}
+                  >
+                    Cancel
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </div>
           </div>
           <div class="mb-10 overflow-x-auto">
@@ -252,7 +263,6 @@ const Users = () => {
               <tbody>
                 {users.map((user) => (
                   <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    
                     <th
                       scope="row"
                       class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -265,18 +275,16 @@ const Users = () => {
                       </span>
                     </td>
                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      <div className='flex flex-col'>
+                      <div className="flex flex-col">
                         {user.vehicles.map((vehicle) => (
                           <p>{vehicle.vehicleNumber}</p>
                         ))}
                       </div>
                     </td>
                     <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      <div className = "flex flex-col">
-                        {user.zones.map((zone)=>(
-                          
-                            <p>{zone.name}</p>
-                          
+                      <div className="flex flex-col">
+                        {user.zones.map((zone) => (
+                          <p>{zone.name}</p>
                         ))}
                       </div>
                     </td>

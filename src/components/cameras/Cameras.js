@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Button, Modal } from 'flowbite-react';
 import api from '../../api';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
+let player = null;
 
 const Cameras = () => {
   const [openModal, setOpenModal] = useState('');
@@ -18,7 +19,6 @@ const Cameras = () => {
   const [zones, setZones] = useState([]);
   const [cameras, setCameras] = useState([]);
   const canvasRef = useRef(null);
-  let player = null ; 
 
   const getZones = async () => {
     const data = await api.fetchZones();
@@ -48,7 +48,6 @@ const Cameras = () => {
         return val;
       })
     );
-    
   };
 
   const loadCameras = async () => {
@@ -75,27 +74,25 @@ const Cameras = () => {
     await loadCameras();
   };
 
-  const startStream = function (url) {
+  const startStream = async function (url) {
     try {
       if (url) {
         console.log(url);
-        (async () => {
-          if (player && player.stop) {
-            player.stop();
-          }
-          const wsLink = await api.getStreamLink({ rtspLink: url });
-          player = new JSMpeg.Player(wsLink, {
-            canvas: document.getElementById('canvas'),
-            videoBufferSize: 1024 * 1024 * 16,
-          });
-        })();
+        console.log(player);
+        if (player && player.stop) {
+          await player.stop();
+        }
+        const wsLink = await api.getStreamLink({ rtspLink: url });
+        player = new JSMpeg.Player(wsLink, {
+          canvas: document.getElementById('canvas'),
+          videoBufferSize: 1024 * 1024 * 16,
+        });
       }
       return <a></a>;
     } catch (error) {
       console.log(error);
     }
   };
-
 
   useEffect(() => {
     (async () => {
@@ -145,7 +142,6 @@ const Cameras = () => {
             {/* Add user and Filter button*/}
             <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
               <div class="flex items-center space-x-3 w-full md:w-auto">
-                
                 <Button
                   onClick={() => {
                     getRtspLinks();
@@ -203,7 +199,7 @@ const Cameras = () => {
                         </label>
                         <select
                           id="category"
-                          defaultValue={""}
+                          defaultValue={''}
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                           onChange={(data) => setCurrentZone(data.target.value)}
                         >
@@ -217,77 +213,90 @@ const Cameras = () => {
                         </select>
                       </div>
                       <div class=" flex items-center sm:col-span-6">
-                        <div className='flex mr-10'>
-                      <Button
-                      color="gray"
-                      onClick={() => setScanNew(true)}
-                    >
-                      Scan RTSPs
-                      </Button>
-                      {scanNew ? <><Button
-                      color="gray"
-                      className = "ml-4"
-                      onClick={() => {
-                        setScanNew(false);
-                        setUsername(null);
-                        setPassword(null);
-                      }}
-                    >
-                      Cancel
-                      </Button></> : <p></p>}
+                        <div className="flex mr-10">
+                          <Button color="gray" onClick={() => setScanNew(true)}>
+                            Scan RTSPs
+                          </Button>
+                          {scanNew ? (
+                            <>
+                              <Button
+                                color="gray"
+                                className="ml-4"
+                                onClick={() => {
+                                  setScanNew(false);
+                                  setUsername(null);
+                                  setPassword(null);
+                                }}
+                              >
+                                Cancel
+                              </Button>
+                            </>
+                          ) : (
+                            <p></p>
+                          )}
                         </div>
 
-                        <p className="text-sm">
-                          Scan for new RTSP Links.
-                        </p>
+                        <p className="text-sm">Scan for new RTSP Links.</p>
                       </div>
-                      {scanNew ?
-                          <>
-                            <div class=" flex items-center sm:col-span-6">
-                        <p className="text-md text-bold mr-2">
-                          Camera login details :
-                        </p>
+                      {scanNew ? (
+                        <>
+                          <div class=" flex items-center sm:col-span-6">
+                            <p className="text-md text-bold mr-2">
+                              Camera login details :
+                            </p>
+                          </div>
+                          <div class="sm:col-span-6 grid gap-4 mb-2 sm:grid-cols-2 justify-center items-center">
+                            <div>
+                              <label
+                                for="name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >
+                                Username
+                              </label>
+                              <input
+                                type="text"
+                                name="name"
+                                id="name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Enter username"
+                                onChange={(data) =>
+                                  setUsername(data.target.value)
+                                }
+                              ></input>
                             </div>
-                            <div class="sm:col-span-6 grid gap-4 mb-2 sm:grid-cols-2 justify-center items-center">
-                        <div>
-                          <label
-                            for="name"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                          >
-                            Username
-                          </label>
-                          <input
-                            type="text"
-                            name="name"
-                            id="name"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Enter username"
-                            onChange={(data) => setUsername(data.target.value)}
-                          ></input>
-                        </div>
-                        <div>
-                          <label
-                            for="brand"
-                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                          >
-                            Password
-                          </label>
-                          <input
-                            type="password"
-                            name="brand"
-                            id="brand"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Enter password"
-                            onChange={(data) => setCamName(data.target.value)}
-                          ></input>
-                        </div>
-                        <div className="mt-2">
-                          <Button color="blue" className="bg-blue-700 text-white border-white" onClick = {() => scanRtspLinks()}>Enter Details</Button>
-                        </div>
+                            <div>
+                              <label
+                                for="brand"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                              >
+                                Password
+                              </label>
+                              <input
+                                type="password"
+                                name="brand"
+                                id="brand"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                placeholder="Enter password"
+                                onChange={(data) =>
+                                  setPassword(data.target.value)
+                                }
+                              ></input>
                             </div>
-                          </> : <></>
-                      }
-                     <div class="sm:col-span-6">
+                            <div className="mt-2">
+                              <Button
+                                color="blue"
+                                className="bg-blue-700 text-white border-white"
+                                onClick={() => scanRtspLinks()}
+                              >
+                                Enter Details
+                              </Button>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <></>
+                      )}
+                      <div class="sm:col-span-6">
                         <label
                           for="category"
                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -295,11 +304,13 @@ const Cameras = () => {
                           Select RTSP Link
                         </label>
                         <select
-                        
                           id="rtsp"
                           onChange={(data) => {
-                            startStream("rtsp://admin:admin@192.168.29.117:554/unicaststream/1");
-                            setCurrentRtspLink(data.target.value)}}
+                            console.log(canvasRef);
+                            console.log('........');
+                            startStream(data.target.value);
+                            setCurrentRtspLink(data.target.value);
+                          }}
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         >
                           {rtspLinks.map((link) => {
@@ -307,7 +318,7 @@ const Cameras = () => {
                           })}
                         </select>
                       </div>
-                      
+
                       <div class="sm:col-span-6">
                         <label
                           for="name"
@@ -322,17 +333,17 @@ const Cameras = () => {
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                           placeholder="Enter Description"
                           required=""
-                          onChange={(data) => setCamDescription(data.target.value)}
+                          onChange={(data) =>
+                            setCamDescription(data.target.value)
+                          }
                         ></input>
                       </div>
                       <div class="sm:col-span-6">
-                      <canvas
-                  id="canvas"
-                  ref={canvasRef}
-                  className='ml-auto mr-auto w-[300px] h-[300px]'
-              
-                />
-                       
+                        <canvas
+                          id="canvas"
+                          ref={canvasRef}
+                          className="ml-auto mr-auto w-[300px] h-[300px]"
+                        />
                       </div>
                     </div>
                   </Modal.Body>
@@ -341,7 +352,8 @@ const Cameras = () => {
                       className="bg-blue-700"
                       onClick={() => {
                         handleOk();
-                        props.setOpenModal(undefined)}}
+                        props.setOpenModal(undefined);
+                      }}
                     >
                       Add
                     </Button>
@@ -353,8 +365,9 @@ const Cameras = () => {
                         setCamDescription(null);
                         setPassword(null);
                         setCurrentZone(null);
-                        setCurrentRtspLink(null)
-                        props.setOpenModal(undefined)}}
+                        setCurrentRtspLink(null);
+                        props.setOpenModal(undefined);
+                      }}
                     >
                       Cancel
                     </Button>
