@@ -1,6 +1,6 @@
 /* eslint-disable no-unreachable */
 /* eslint-disable eqeqeq */
-const baseUrl = 'https://dae0-2405-201-4028-5811-8f7-cb2-8f1a-de91.ngrok-free.app';
+const baseUrl = 'https://948e-2405-201-4028-5811-9066-1182-e5c-b4b3.ngrok-free.app';
 // const baseUrl = 'http://192.168.29.183:3000';
 // const baseUrl =
 //   'http://dd01-2405-201-4028-5811-fc87-6ab5-299a-9ee8.ngrok-free.app';
@@ -55,7 +55,9 @@ export default {
       url: `${baseUrl}//admin/alerts/filter`,
       method: 'POST',
     });
+    console.log(resp.data);
     return resp.data;
+    
   },
 
   addFeed: async function ({ rtspUrl, zoneId, cameraName, description }) {

@@ -11,16 +11,22 @@ const Alerts = () => {
         setAlerts(
             fetchedAlerts.map((alert) => {
                 return {
-                    alertID : alert.id,
-                    camera : alert.camera , 
-                    message : alert.body , 
-                    snap : alert?.alert?.data?.url , 
-                    preview : alert , 
-                    time : alert.time , 
-                    type : alert.type ,
-
+                    alertID : alert._id , 
+                    alert : alert.alert.map((val) => {
+                        return {
+                            title : val.title , 
+                            body : val.body,
+                            url : val.data.url , 
+                        }
+                    }),
+                    cameraName : alert.cameraName , 
+                    label : alert.label , 
+                    detectedUserID : alert.detectedUserId , 
+                    type : alert.type , 
                 };
-            })
+                
+            }),
+
         );
     };
 
@@ -114,7 +120,7 @@ const Alerts = () => {
 
                         
 
-                        {/* Add user and Filter button*/}
+                        {/* Add user and Filter button
                         <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
             
                             <div class="flex items-center space-x-3 w-full md:w-auto">
@@ -163,29 +169,27 @@ const Alerts = () => {
                                     </ul>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto mb-10">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
                                 <th scope="col" class="px-4 py-3">alert id</th>
                                 <th scope="col" class="px-2 py-3">message</th>
                                 <th scope="col" class="px-2 py-3">camera</th>
-                                <th scope="col" class="px-2 py-3">zone</th>
-                                <th scope="col" class="px-2 py-3">time</th>  
-                                <th scope="col" class="px-2 py-3">type</th>  
+                                <th scope="col" class="px-2 py-3">type</th>
+                                <th scope="col" class="px-2 py-3">preview</th>  
                             </tr>
                         </thead>
                         <tbody>
-                            {dummyData.map((alert) => (
+                            {alerts.map((alert) => (
                                 <tr class="border-b dark:border-gray-700">
                                     <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{alert.alertID}</th>
                                     <td class="px-2 py-3">{alert.message}</td>
-                                    <td class="px-2 py-3">{alert.camera}</td>
-                                    <td class="px-4 py-3">{alert.zone}</td>
-                                    <td class="px-4 py-3">{alert.time}</td>
-                                    <td class="px-4 py-3">{alert.img}</td>
+                                    <td class="px-2 py-3">{alert.alert.body}</td>
+                                    <td class="px-4 py-3">{alert.cameraName}</td>
+                                    <td class="px-4 py-3">{alert.type}</td>
                                     <td class="px-4 py-3 flex items-center justify-end">
                                         <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
@@ -209,11 +213,12 @@ const Alerts = () => {
                                 </tr>
                             ))}
                             
+                            {console.log(alerts)}
                            
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                {/* <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                         Showing
                         <span class="ml-2 mr-2 font-semibold text-gray-900 dark:text-white">1-10</span>
@@ -253,7 +258,7 @@ const Alerts = () => {
                             </a>
                         </li>
                     </ul>
-                </nav>
+                </nav> */}
             </div>
         </div>
         </section>
