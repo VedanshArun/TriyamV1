@@ -57,7 +57,6 @@ export default {
       method: 'POST',
       data: { limit: 100, offset: 0 },
     });
-    console.log(resp.data);
     return resp.data;
   },
 
