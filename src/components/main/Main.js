@@ -34,7 +34,7 @@ const components = {
 
 const Main = () => {
 
-  const [render, updateRender] = useState(7);
+  const [render, updateRender] = useState(8);
   const handleMenuClick = (key) => {
     updateRender(key);
   };
