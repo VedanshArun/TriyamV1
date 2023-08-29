@@ -1,6 +1,7 @@
 /* eslint-disable no-unreachable */
 /* eslint-disable eqeqeq */
-const baseUrl = 'https://948e-2405-201-4028-5811-9066-1182-e5c-b4b3.ngrok-free.app';
+const baseUrl =
+  'https://948e-2405-201-4028-5811-9066-1182-e5c-b4b3.ngrok-free.app';
 // const baseUrl = 'http://192.168.29.183:3000';
 // const baseUrl =
 //   'http://dd01-2405-201-4028-5811-fc87-6ab5-299a-9ee8.ngrok-free.app';
@@ -52,12 +53,12 @@ export default {
   },
   fetchAlerts: async function () {
     let resp = await apicall({
-      url: `${baseUrl}//admin/alerts/filter`,
+      url: `${baseUrl}/admin/alerts/filter`,
       method: 'POST',
+      data: { limit: 100, offset: 0 },
     });
     console.log(resp.data);
     return resp.data;
-    
   },
 
   addFeed: async function ({ rtspUrl, zoneId, cameraName, description }) {
