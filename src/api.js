@@ -31,7 +31,7 @@ export default {
         console.log(blob);
         console.log('........');
         const formData = new FormData();
-        const file = new File([blob], 'filename.png');
+        const file = new File([blob], 'filename.jpeg');
         formData.append('image', file);
         const token = localStorage.getItem('token');
         const API_URL = `${baseUrl}/admin/detect-faces`;
