@@ -22,6 +22,13 @@ export default {
     });
     return resp.data;
   },
+  createGatePass: async function ({ userId , companyName , expiryDate, visitingUsers }) {
+    let resp = await apicall({
+      url: `${baseUrl}/admin/generate-gate-pass`,
+      data: { userId, companyName , expiryDate , visitingUsers},
+    });
+    return resp.data;
+  },
   detectFaces: async function ({ imgSrc }) {
     const base64 = imgSrc; // Place your base64 url here.
     console.log(base64);

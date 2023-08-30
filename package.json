@@ -16,6 +16,7 @@
     "flowbite": "^1.7.0",
     "flowbite-datepicker": "^1.2.2",
     "flowbite-react": "^0.5.0",
+    "javascript-binary-converter": "^1.0.2",
     "mapbox-gl": "^2.15.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -26,6 +27,7 @@
     "react-player": "^2.12.0",
     "react-scripts": "5.0.1",
     "react-webcam": "^7.1.1",
+    "tailwind-datepicker-react": "^1.4.2",
     "video.js": "^8.3.0",
     "videojs-flash": "^2.2.1",
     "web-vitals": "^2.1.4"
