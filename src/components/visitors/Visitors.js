@@ -1,56 +1,73 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React , {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import api from '../../api';
 import { Dropdown } from 'flowbite-react';
 
 const Visitors = () => {
-    const [users,setUsers] = useState([]);
-    const loadUsers = async () => {
-        const data = await api.getVisitors();
-        setUsers(
-          data.map((user) => {
-                return {
-                    userId: user._id,
-                    name: user.name,
-                    images: user.images,
-                    mobile: user.mobile,
-                    expiryDate : user.gatePasses[0].expiryDate,
-                    companyName : user.gatePasses[0].companyName,
-                  }; 
-          })
-        );
-        console.log(users);
-      };
-      useEffect(() => {
-        (async () => {
-          await loadUsers();
-        })();
-      }, []);
+  const [users, setUsers] = useState([]);
+  const loadUsers = async () => {
+    const data = await api.getVisitors();
+    setUsers(
+      data.map((user) => {
+        return {
+          userId: user._id,
+          name: user.name,
+          images: user.images,
+          mobile: user.mobile,
+          expiryDate: user.gatePasses[0]?.expiryDate,
+          companyName: user.gatePasses[0]?.companyName,
+        };
+      })
+    );
+    console.log(users);
+  };
+  useEffect(() => {
+    (async () => {
+      await loadUsers();
+    })();
+  }, []);
 
-    return (
-        <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
-            <div class="mx-auto  px-4 ">
-                <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
-                    <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
-                        
-                        {/*Search bar for the table*/}
+  return (
+    <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
+      <div class="mx-auto  px-4 ">
+        <div class="bg-white dark:bg-gray-800 relative shadow-md sm:rounded-lg overflow-hidden">
+          <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
+            {/*Search bar for the table*/}
 
-                        <div class="w-full md:w-1/2">
-                            <form class="flex items-center">
-                                <label for="simple-search" class="sr-only">Search</label>
-                                <div class="relative w-full">
-                                    <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500 dark:text-gray-400" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-                                        </svg>
-                                    </div>
-                                    <input type="text" id="simple-search" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="Search" required=""></input>
-                                </div>
-                            </form>
-                        </div>
+            <div class="w-full md:w-1/2">
+              <form class="flex items-center">
+                <label for="simple-search" class="sr-only">
+                  Search
+                </label>
+                <div class="relative w-full">
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                      fill="currentColor"
+                      viewbox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    id="simple-search"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    placeholder="Search"
+                    required=""
+                  ></input>
+                </div>
+              </form>
+            </div>
 
-                        {/* Add user and Filter button
+            {/* Add user and Filter button
                         <div class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
             
                             <div class="flex items-center space-x-3 w-full md:w-auto">
@@ -100,46 +117,63 @@ const Visitors = () => {
                                 </div>
                             </div>
                         </div> */}
-                    </div>
-                <div class="overflow-x-auto mb-10">
-                    <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                            <tr>
-                                <th scope="col" class="px-4 py-3">visitor id</th>
-                                <th scope="col" class="px-2 py-3">Name</th>
-                                <th scope="col" class="px-2 py-3">Mobile</th>
-                                <th scope="col" class="px-2 py-3">Company Name</th>
-                                <th scope="col" class="px-2 py-3">expiry Date</th> 
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {users.map((visitor) => (
-                                <tr class="border-b dark:border-gray-700">
-                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{visitor.userId}</th>
-                                    <td class="px-2 py-3">{visitor.name}</td>
-                                    <td class="px-2 py-3">{visitor.mobile}</td>
-                                    <td class="px-4 py-3">{visitor.companyName}</td>
-                                    <td class="px-4 py-3">{visitor.expiryDate}</td>
-                                
-                                    <td class="px-4 py-3 flex items-center">
-                                        <Dropdown
-                        inline
-                        label="Options"
-                        placement="bottom"
-                      >
-                        <Dropdown.Item>
+          </div>
+          <div class="overflow-x-auto mb-10">
+            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" class="px-4 py-3">
+                    visitor id
+                  </th>
+                  <th scope="col" class="px-2 py-3">
+                    Name
+                  </th>
+                  <th scope="col" class="px-2 py-3">
+                    Mobile
+                  </th>
+                  <th scope="col" class="px-2 py-3">
+                    Company Name
+                  </th>
+                  <th scope="col" class="px-2 py-3">
+                    expiry Date
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {users.map((visitor) => (
+                  <tr class="border-b dark:border-gray-700">
+                    <th
+                      scope="row"
+                      class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      {visitor.userId}
+                    </th>
+                    <td class="px-2 py-3">{visitor.name}</td>
+                    <td class="px-2 py-3">{visitor.mobile}</td>
+                    <td class="px-4 py-3">{visitor.companyName}</td>
+                    <td class="px-4 py-3">{visitor.expiryDate}</td>
+
+                    <td class="px-4 py-3 flex items-center">
+                      <Dropdown inline label="Options" placement="bottom">
+                        <Dropdown.Item
+                          onClick={async () => {
+                            await api.updateUser({
+                              type: 'BLACKLISTED',
+                              _id: visitor.userId,
+                            });
+                            await loadUsers();
+                          }}
+                        >
                           Blacklist User
                         </Dropdown.Item>
                       </Dropdown>
-                                    </td>
-                                </tr>
-                            ))}
-                            
-                           
-                        </tbody>
-                    </table>
-                </div>
-                {/* <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {/* <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                         Showing
                         <span class="ml-2 mr-2 font-semibold text-gray-900 dark:text-white">1-10</span>
@@ -180,11 +214,10 @@ const Visitors = () => {
                         </li>
                     </ul>
                 </nav> */}
-            </div>
         </div>
-        </section>
-        
-    )
-}
+      </div>
+    </section>
+  );
+};
 
-export default Visitors
+export default Visitors;

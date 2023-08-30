@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
-import { Button, Modal,FileInput, Label} from 'flowbite-react';
+import { Button, Modal, FileInput, Label } from 'flowbite-react';
 import { Dropdown } from 'flowbite-react';
 import api from '../../api';
 
@@ -98,21 +98,12 @@ const Users = () => {
                 <Modal.Header>Add a new user</Modal.Header>
                 <Modal.Body>
                   <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
-                    
                     <div class="sm:col-span-6">
-                      <div
-                        className=""
-                        id="fileUpload"
-                      >
+                      <div className="" id="fileUpload">
                         <div className="mb-2 block">
-                          <Label
-                            htmlFor="file"
-                            value="Upload Image"
-                          />
+                          <Label htmlFor="file" value="Upload Image" />
                         </div>
-                        <FileInput
-                          id="file"
-                        />
+                        <FileInput id="file" />
                       </div>
                     </div>
                     {/* <div class="sm:col-span-3">
@@ -143,7 +134,7 @@ const Users = () => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Enter name of the user"
                         required=""
-                        onChange={(data)=> setName(data.target.value)}
+                        onChange={(data) => setName(data.target.value)}
                       ></input>
                     </div>
                     <div class="sm:col-span-3">
@@ -242,7 +233,7 @@ const Users = () => {
                         id="category"
                         defaultValue={''}
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        onChange={(data) => setZones(data.target.value)}                      
+                        onChange={(data) => setZones(data.target.value)}
                       ></select>
                     </div>
                     <div class="sm:col-span-6">
@@ -330,12 +321,16 @@ const Users = () => {
                       </div>
                     </td>
                     <td class="px-4 py-3 flex items-center justify-center">
-                      <Dropdown
-                        inline
-                        label="Options"
-                        placement="bottom"
-                      >
-                        <Dropdown.Item>
+                      <Dropdown inline label="Options" placement="bottom">
+                        <Dropdown.Item
+                          onClick={async () => {
+                            await api.updateUser({
+                              type: 'BLACKLISTED',
+                              _id: user.userID,
+                            });
+                            await loadUsers();
+                          }}
+                        >
                           Blacklist User
                         </Dropdown.Item>
                       </Dropdown>

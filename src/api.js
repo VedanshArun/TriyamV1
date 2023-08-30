@@ -98,6 +98,15 @@ export default {
 
     return resp.data;
   },
+  updateUser: async ({ type, _id }) => {
+    let resp = await apicall({
+      url: `${baseUrl}/admin/user`,
+      method: 'PUT',
+      data: { type, _id },
+    });
+
+    return resp.data;
+  },
 };
 
 async function apiCallMediaUpload(
