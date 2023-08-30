@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React , {useState, useEffect} from 'react';
 import api from '../../api';
@@ -8,26 +9,17 @@ const Visitors = () => {
         const data = await api.getUsers();
         setUsers(
           data.map((user) => {
-            if(user.type === 'VISITOR'){
                 return {
-                    id: user._id,
+                    userId: user._id,
                     name: user.name,
                     images: user.images,
                     mobile: user.mobile,
-                    gatePasses : user.gatePasses.map((gatePass) => {
-                        return {
-                            id : gatePass._id , 
-                            userID : gatePass.userId,
-
-                        }
-                    }),
-                    expiryDate : user.expiryDate,
-                    companyName : user.companyName,
-
-                  };
-            } 
+                    expiryDate : user.gatePasses[0].expiryDate,
+                    companyName : user.gatePasses[0].companyName,
+                  }; 
           })
         );
+        console.log(users);
       };
       useEffect(() => {
         (async () => {
@@ -35,141 +27,6 @@ const Visitors = () => {
         })();
       }, []);
 
-    const dummyData = [
-        {
-            visitorID : 'x687s2nj',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : '2gigxhxn',
-            visitorName : 'Arnav Choudhary',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : 'zfxm99qs',
-            visitorName : 'Yash Jindal',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : 'npl9tqmr',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : '4o6vrn7a',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : '3rjuhrhd',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : 'x687s2nj',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : '2gigxhxn',
-            visitorName : 'Arnav Choudhary',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : 'zfxm99qs',
-            visitorName : 'Yash Jindal',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : 'npl9tqmr',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : '4o6vrn7a',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            visitorID : '3rjuhrhd',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-
-    ]
     return (
         <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
             <div class="mx-auto  px-4 ">
@@ -243,7 +100,7 @@ const Visitors = () => {
                             </div>
                         </div>
                     </div>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto mb-10">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -257,13 +114,13 @@ const Visitors = () => {
                         <tbody>
                             {users.map((visitor) => (
                                 <tr class="border-b dark:border-gray-700">
-                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{visitor.id}</th>
+                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{visitor.userId}</th>
                                     <td class="px-2 py-3">{visitor.name}</td>
                                     <td class="px-2 py-3">{visitor.mobile}</td>
                                     <td class="px-4 py-3">{visitor.companyName}</td>
                                     <td class="px-4 py-3">{visitor.expiryDate}</td>
                                 
-                                    <td class="px-4 py-3 flex items-center justify-end">
+                                    <td class="px-4 py-3 flex items-center">
                                         <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
                                             <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
@@ -290,7 +147,7 @@ const Visitors = () => {
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                {/* <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                         Showing
                         <span class="ml-2 mr-2 font-semibold text-gray-900 dark:text-white">1-10</span>
@@ -330,7 +187,7 @@ const Visitors = () => {
                             </a>
                         </li>
                     </ul>
-                </nav>
+                </nav> */}
             </div>
         </div>
         </section>
