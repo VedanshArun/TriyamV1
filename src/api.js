@@ -22,10 +22,15 @@ export default {
     });
     return resp.data;
   },
-  createGatePass: async function ({ userId , companyName , expiryDate, visitingUsers }) {
+  createGatePass: async function ({
+    userId,
+    companyName,
+    expiryDate,
+    visitingUsers,
+  }) {
     let resp = await apicall({
       url: `${baseUrl}/admin/generate-gate-pass`,
-      data: { userId, companyName , expiryDate , visitingUsers},
+      data: { userId, companyName, expiryDate, visitingUsers },
     });
     return resp.data;
   },
@@ -117,33 +122,44 @@ export default {
     return resp.data;
   },
 
-  addUser: async ({ imgSrc, name , aadhaar, mobile , address , vehicle, type, }) => {
-      const base64 = imgSrc; // Place your base64 url here.
-      console.log(base64);
-      let blob = await fetch(base64);
-      blob = await blob.blob();
-      console.log(blob);
-      const formData = new FormData();
-      const file = new File([blob], 'filename.jpeg');
-      formData.append('image', file);
-      formData.append('type', type);
-      formData.append('name', name);
-     
-      formData.append('mobile', mobile);
-      formData.append('vehicles', vehicle);
-      
-      formData.append('aadhaarNumber', aadhaar);
-      
-      formData.append('address', address);
-      const token = localStorage.getItem('token');
-      const API_URL = `${baseUrl}/admin/upload-face`;
-      let res = await fetch(API_URL, {
-        method: 'POST',
-        body: formData,
-        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-      });
-      res = await res.json();
-      return res.data;
+  addUser: async ({
+    imgSrc,
+    name,
+    aadhaarNumber,
+    mobile,
+    address,
+    vehicles = [],
+    type,
+    zoneIds,
+  }) => {
+    const base64 = imgSrc; // Place your base64 url here.
+    console.log(base64);
+    let blob = await fetch(base64);
+    blob = await blob.blob();
+    console.log(blob);
+    const formData = new FormData();
+    const file = new File([blob], 'filename.jpeg');
+    formData.append('image', file);
+    formData.append('type', type);
+    formData.append('name', name);
+
+    formData.append('mobile', mobile);
+    formData.append('vehicles', JSON.stringify(vehicles));
+
+    formData.append('zoneIds', JSON.stringify(zoneIds));
+
+    formData.append('aadhaarNumber', aadhaarNumber);
+
+    formData.append('address', address);
+    const token = localStorage.getItem('token');
+    const API_URL = `${baseUrl}/admin/upload-face`;
+    let res = await fetch(API_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    });
+    res = await res.json();
+    return res.data;
   },
   addUserWithBlob: async ({ file }) => {
     let resp = await apiCallMediaUpload({

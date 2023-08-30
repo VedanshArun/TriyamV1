@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Button, Modal } from 'flowbite-react';
-import Datepicker from "tailwind-datepicker-react"
+import Datepicker from 'tailwind-datepicker-react';
 import Webcam from 'react-webcam';
 import api from '../../api';
 
 const Snap = () => {
-  const [id , setId] = useState(null);
+  const [id, setId] = useState(null);
   const [userDetected, setUserDetected] = useState(false);
   const [openModal, setOpenModal] = useState('');
   const props = { openModal, setOpenModal };
@@ -14,44 +14,43 @@ const Snap = () => {
   const [company, setCompany] = useState(null);
   const [number, setNumber] = useState(null);
   const [address, setAddress] = useState(null);
-  const [vehicle , setVehicle] = useState(null);
+  const [vehicle, setVehicle] = useState(null);
   const [visitingOfficer, setVisitingOfficer] = useState(null);
   const [expiryDate, setExpiryDate] = useState(null);
   const [image, setImage] = useState(null);
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [show, setShow] = useState(false);
-	
-	const handleClose = (state) => {
-		setShow(state)
-	}
+
+  const handleClose = (state) => {
+    setShow(state);
+  };
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
   }, [webcamRef]);
 
-
-
-  const handleOkWhenUserDetected = async () => {
+  const handleOkWhenUserDetected = async ({ userId }) => {
     await api.createGatePass({
-      userId: id ,
-      expiryDate : expiryDate ,
-      companyName : company , 
-      visitingUsers : visitingOfficer ,
+      userId: userId ? userId : id,
+      expiryDate: expiryDate,
+      companyName: company,
+      visitingUsers: visitingOfficer,
     });
   };
 
-  const handleOK = async() => {
-    await api.addUser({
-      name : name ,
-      address : address , 
-      mobile : number , 
-      type : 'VISITOR' , 
-      vehicles : vehicle , 
-      aadhaarNumber : aadhaar , 
-      imgSrc : imgSrc,
+  const handleOK = async () => {
+    return api.addUser({
+      name: name,
+      address: address,
+      mobile: number,
+      type: 'VISITOR',
+      vehicles: [{ vehicleNumber: vehicle }],
+      aadhaarNumber: aadhaar,
+      imgSrc: imgSrc,
+      zoneIds: ['64d5201ec58e735238c4926c'],
     });
-  }
+  };
 
   const retake = () => {
     setImgSrc(null);
@@ -61,12 +60,12 @@ const Snap = () => {
     selectedDate = new Date(selectedDate);
     const unixTimestamp = Math.floor(selectedDate.getTime() / 1000);
     setExpiryDate(unixTimestamp);
-	}
+  };
 
   const loadFaces = async (imgSrc) => {
     const fetchedFaces = await api.detectFaces({ imgSrc });
     console.log(fetchedFaces);
-    if(fetchedFaces.length !== 0){
+    if (fetchedFaces.length !== 0) {
       setId(fetchedFaces[0].userId);
       setUserDetected(true);
       setName(fetchedFaces[0].label);
@@ -78,7 +77,6 @@ const Snap = () => {
       setAddress(fetchedFaces[0].address);
     }
   };
-
 
   return (
     <>
@@ -150,11 +148,10 @@ const Snap = () => {
       {imgSrc ? (
         <div className="flex flex-col justify-center items-center">
           <img src={imgSrc} width={400} height={400} />
-          <h2 className='mt-5'>User Detected : {name}</h2>
+          <h2 className="mt-5">User Detected : {name}</h2>
         </div>
       ) : (
-        <>
-        </>
+        <></>
       )}
       <div class="  justify-center items-center m-20 bg-white p-20 grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
         <div class="sm:col-span-3">
@@ -168,7 +165,7 @@ const Snap = () => {
             type="text"
             name="cameraName"
             id="cameraName"
-            value = {name}
+            value={name}
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             placeholder="Enter name of the user"
             required=""
@@ -186,7 +183,7 @@ const Snap = () => {
             type="text"
             name="cameraName"
             id="cameraName"
-            value = {aadhaar}
+            value={aadhaar}
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             placeholder="Enter aadhaar number"
             required=""
@@ -204,7 +201,7 @@ const Snap = () => {
             type="number"
             name="cameraName"
             id="cameraName"
-            value = {number}
+            value={number}
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             placeholder="mobile number"
             required=""
@@ -221,7 +218,7 @@ const Snap = () => {
           <input
             type="text"
             name="cameraName"
-            value = {company}
+            value={company}
             id="cameraName"
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             placeholder="vehicle number"
@@ -240,7 +237,7 @@ const Snap = () => {
             type="text"
             name="cameraName"
             id="cameraName"
-            value = {vehicle}
+            value={vehicle}
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
             placeholder="mobile number"
             required=""
@@ -285,7 +282,11 @@ const Snap = () => {
         </div>
         <div class="flex justify-center items-center sm:col-span-6">
           <div className="relative w-72">
-          <Datepicker  onChange={handleChange} show={show} setShow={handleClose} />
+            <Datepicker
+              onChange={handleChange}
+              show={show}
+              setShow={handleClose}
+            />
             <div className="flex absolute inset-y-0 right-0 items-center pr-3 pointer-events-none">
               <svg
                 aria-hidden="true"
@@ -305,18 +306,21 @@ const Snap = () => {
         </div>
 
         <div class=" mt-10 flex justify-center items-center sm:col-span-6">
-          <Button className="bg-blue-700"
-            onClick = {async() => {
-              if(userDetected){
-                await handleOkWhenUserDetected();
-              }
-              else{
-                await handleOK();
-                await loadFaces(imgSrc);
-                await handleOkWhenUserDetected();
+          <Button
+            className="bg-blue-700"
+            onClick={async () => {
+              if (userDetected) {
+                await handleOkWhenUserDetected({});
+              } else {
+                const resp = await handleOK();
+                await handleOkWhenUserDetected({
+                  userId: resp?.userDetails?._id,
+                });
               }
             }}
-          >Generate Pass</Button>
+          >
+            Generate Pass
+          </Button>
         </div>
       </div>
     </>
