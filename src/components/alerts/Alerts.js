@@ -146,9 +146,9 @@ const Alerts = () => {
                         <Modal.Body>
                             <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
                               <div class="sm:col-span-6">
-                                <img src={url} width={100} height={100} alt='alert preview photo'/>
+                                <img src={url} width={600} height={600} alt='alert preview photo'/>
                               </div>
-                              <p>{url}</p>
+                              
                             </div>
                         </Modal.Body>
                         <Modal.Footer>

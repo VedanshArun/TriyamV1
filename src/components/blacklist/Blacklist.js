@@ -16,6 +16,7 @@ const GeneratePass = () => {
           mobile: user.mobile,
           address: user.address,
           image: user.images[0],
+          gatePasses : user.gatePasses ,
         };
       })
     );
@@ -81,11 +82,8 @@ const GeneratePass = () => {
                   <th scope="col" class="px-2 py-3">
                     phone number
                   </th>
-                  <th scope="col" class="px-2 py-3">
+                  <th scope="col" class="px-6 py-3">
                     address
-                  </th>
-                  <th scope="col" class="px-2 py-3">
-                    photo
                   </th>
                 </tr>
               </thead>
@@ -100,18 +98,13 @@ const GeneratePass = () => {
                     </th>
                     <td class="px-2 py-3">{visitor.name}</td>
                     <td class="px-2 py-3">{visitor.mobile}</td>
-                    <td class="px-4 py-3">{visitor.address}</td>
-                    <td class="px-4 py-3">
-                      <img
-                        src={visitor.image}
-                        width={60}
-                        height={60}
-                        alt="Person image"
-                      />
-                    </td>
+                    <td class="px-6 py-3">{visitor.address}</td>
                     <td class="px-4 py-3 flex items-center justify-end">
                       <Dropdown inline label="Options" placement="bottom">
-                        <Dropdown.Item
+
+                        {Array.isArray(visitor.gatePasses) && visitor.gatePasses.length ? (
+                          <>
+                          <Dropdown.Item
                           onClick={async () => {
                             await api.updateUser({
                               type: 'EMPLOYEE',
@@ -133,6 +126,20 @@ const GeneratePass = () => {
                         >
                           Move to Visitor
                         </Dropdown.Item>
+                          </>
+                        ) : (
+                          <Dropdown.Item
+                          onClick={async () => {
+                            await api.updateUser({
+                              type: 'EMPLOYEE',
+                              _id: visitor.userId,
+                            });
+                            await loadUsers();
+                          }}
+                        >
+                          Move to Employee
+                        </Dropdown.Item>
+                        )}
                       </Dropdown>
                     </td>
                   </tr>

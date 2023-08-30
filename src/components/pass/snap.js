@@ -2,6 +2,7 @@ import React , {useState, useEffect, useRef, useCallback} from 'react'
 import {Button , Modal} from 'flowbite-react';
 import Datepicker from 'flowbite-datepicker/Datepicker';
 import Webcam from "react-webcam";
+import api from '../../api';
 
 
 const Snap = () => {
@@ -17,7 +18,6 @@ const Snap = () => {
     const [image , setImage] = useState(null);
     const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
-
   const capture = useCallback(() => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
@@ -26,6 +26,12 @@ const Snap = () => {
   const retake = () => {
     setImgSrc(null);
   };
+
+  const loadFaces = async (imgSrc) => {
+    const fetchedFaces = await api.detectFaces({imgSrc});
+    console.log(fetchedFaces);
+  };
+
 
     useEffect(() => {
     const datepickerEl = document?.getElementById("datepickerId");
@@ -73,6 +79,7 @@ const Snap = () => {
                         setImage(imgSrc)
                         props.setOpenModal(undefined);
                         console.log(imgSrc)
+                        loadFaces(imgSrc)
                       }}
                     >
                       Use photo
@@ -97,6 +104,7 @@ const Snap = () => {
                   </Modal.Footer>
                 </Modal>
             </div>
+            {imgSrc ? (<div className='flex justify-center items-center'><img src={imgSrc} width={400} height={400}/></div>) : (<></>)}
             <div class="  justify-center items-center m-20 bg-white p-20 grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
                     <div class="sm:col-span-3">
                       <label
