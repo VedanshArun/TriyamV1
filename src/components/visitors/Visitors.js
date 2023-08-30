@@ -15,8 +15,8 @@ const Visitors = () => {
           name: user.name,
           images: user.images,
           mobile: user.mobile,
-          expiryDate: user.gatePasses[0]?.expiryDate,
-          companyName: user.gatePasses[0]?.companyName,
+          expiryDate: user.gatePasses[user.gatePasses.length -1]?.expiryDate,
+          companyName: user.gatePasses[user.gatePasses.length -1]?.companyName,
         };
       })
     );

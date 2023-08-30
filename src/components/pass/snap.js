@@ -41,6 +41,18 @@ const Snap = () => {
     });
   };
 
+  const handleOK = async() => {
+    await api.addUser({
+      name : name ,
+      address : address , 
+      mobile : number , 
+      type : 'VISITOR' , 
+      vehicles : vehicle , 
+      aadhaarNumber : aadhaar , 
+      imgSrc : imgSrc,
+    });
+  }
+
   const retake = () => {
     setImgSrc(null);
   };
@@ -142,7 +154,7 @@ const Snap = () => {
         </div>
       ) : (
         <>
-        <h2 className='flex flex-col justify-center items-center mt-5'>New User Detected</h2></>
+        </>
       )}
       <div class="  justify-center items-center m-20 bg-white p-20 grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
         <div class="sm:col-span-3">
@@ -294,12 +306,14 @@ const Snap = () => {
 
         <div class=" mt-10 flex justify-center items-center sm:col-span-6">
           <Button className="bg-blue-700"
-            onClick = {() => {
+            onClick = {async() => {
               if(userDetected){
-                handleOkWhenUserDetected();
+                await handleOkWhenUserDetected();
               }
               else{
-                
+                await handleOK();
+                await loadFaces(imgSrc);
+                await handleOkWhenUserDetected();
               }
             }}
           >Generate Pass</Button>

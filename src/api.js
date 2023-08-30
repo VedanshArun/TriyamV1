@@ -117,7 +117,35 @@ export default {
     return resp.data;
   },
 
-  addUser: async ({ file }) => {
+  addUser: async ({ imgSrc, name , aadhaar, mobile , address , vehicle, type, }) => {
+      const base64 = imgSrc; // Place your base64 url here.
+      console.log(base64);
+      let blob = await fetch(base64);
+      blob = await blob.blob();
+      console.log(blob);
+      const formData = new FormData();
+      const file = new File([blob], 'filename.jpeg');
+      formData.append('image', file);
+      formData.append('type', type);
+      formData.append('name', name);
+     
+      formData.append('mobile', mobile);
+      formData.append('vehicles', vehicle);
+      
+      formData.append('aadhaarNumber', aadhaar);
+      
+      formData.append('address', address);
+      const token = localStorage.getItem('token');
+      const API_URL = `${baseUrl}/admin/upload-face`;
+      let res = await fetch(API_URL, {
+        method: 'POST',
+        body: formData,
+        headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+      });
+      res = await res.json();
+      return res.data;
+  },
+  addUserWithBlob: async ({ file }) => {
     let resp = await apiCallMediaUpload({
       url: `${baseUrl}/admin/upload-face`,
       multipartData: file,
