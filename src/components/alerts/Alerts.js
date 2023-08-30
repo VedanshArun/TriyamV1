@@ -5,19 +5,20 @@ import {Button , Modal} from 'flowbite-react';
 
 
 const Alerts = () => {
-  const [alerts, setAlerts] = useState([]);
+    const [alerts, setAlerts] = useState([]);
     const [openModal, setOpenModal] = useState('');
     const props = { openModal, setOpenModal };
-  const loadAlerts = async () => {
+    const [url,setUrl] = useState(null);
+    const loadAlerts = async () => {
     const fetchedAlerts = await api.fetchAlerts();
-    console.log(fetchedAlerts);
+    
     setAlerts(
       fetchedAlerts.map((alert) => {
         return {
             alertID: alert._id,
             title : alert.alert.title , 
             body : alert.alert.body , 
-            url : alert.alert.url , 
+            url : alert.url , 
             cameraName: alert.cameraName,
             label: alert.label,
             detectedUserID: alert.detectedUserId,
@@ -130,7 +131,8 @@ const Alerts = () => {
                         <Button
                             color = "gray"
                             onClick={() => {
-                            props.setOpenModal(undefined);                
+                            setUrl(alert.url);
+                            props.setOpenModal('default');               
                         }}
                         >
                             Preview
@@ -139,12 +141,29 @@ const Alerts = () => {
                         </td>
                     </tr>
                     <Modal show={props.openModal === 'default'}
-                  onClose={() => props.setOpenModal(undefined)}>
+                        onClose={() => props.setOpenModal(undefined)}>
+                          <Modal.Header>Alert Preview</Modal.Header>
                         <Modal.Body>
-                            <div>
-                                <p>Yes</p>
+                            <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
+                              <div class="sm:col-span-6">
+                                <img src={url} width={100} height={100} alt='alert preview photo'/>
+                              </div>
+                              <p>{url}</p>
                             </div>
                         </Modal.Body>
+                        <Modal.Footer>
+                    
+                    <Button
+                      color="gray"
+                      onClick={() => {
+                        
+                        props.setOpenModal(undefined);
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </Modal.Footer>
+
                     </Modal>
                   </>
                 ))}

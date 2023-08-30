@@ -7,7 +7,7 @@ import { Dropdown } from 'flowbite-react';
 const Visitors = () => {
     const [users,setUsers] = useState([]);
     const loadUsers = async () => {
-        const data = await api.getUsers();
+        const data = await api.getVisitors();
         setUsers(
           data.map((user) => {
                 return {

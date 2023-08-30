@@ -1,63 +1,71 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { AiFillCamera } from 'react-icons/ai';
+import React, { useRef, useState, useEffect , useCallback } from 'react';
+import {Button , Modal} from 'flowbite-react';
+import Webcam from "react-webcam";
 import './Home.css';
 
 const Home = () => {
-  const videoRef = useRef(null);
-  const photoRef = useRef(null);
+  const webcamRef = useRef(null);
+  const [imgSrc, setImgSrc] = useState(null);
 
-  const getVideo = () => {
-    navigator.mediaDevices
-      .getUserMedia({
-        video: { width: 1920, height: 1080 },
-      })
-      .then((stream) => {
-        let video = videoRef.current;
-        video.srcObject = stream;
-        var nopromise = {
-          catch: new Function(),
-        };
-        (video.play() || nopromise).catch(function () {});
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+  const capture = useCallback(() => {
+    const imageSrc = webcamRef.current.getScreenshot();
+    setImgSrc(imageSrc);
+  }, [webcamRef]);
+
+  const retake = () => {
+    setImgSrc(null);
   };
-
-  const takePhoto = () => {
-    const width = 414;
-    const height = width / (16 / 9);
-
-    let video = videoRef.current;
-    let photo = photoRef.current;
-
-    photo.width = width;
-    photo.height = height;
-
-    let ctx = photo.getContext('2d');
-    ctx.drawImage(video, 0, 0, width, height);
-  };
-
-  useEffect(() => {
-    getVideo();
-    return () => {
-      console.log('component unmounted .......');
-    };
-  }, [videoRef]);
 
   return (
-    <div>
-      <div class="videoFeed">
-        <video ref={videoRef}></video>
-        <button class="snap" onClick={takePhoto}>
-          <AiFillCamera className="w-6 h-6" />
-        </button>
+    <>
+      <div class="flex flex-col items-center justify-center m-5">
+        <div className = "container" >
+        {imgSrc ? (
+          <img src={imgSrc} alt="webcam" />
+        ) : (
+          <Webcam class = "relative" height={200} width={200} ref={webcamRef} />
+        )}
+        </div>
+        <div class="absolute bottom-0 flex justify-center items-center mt-5">
+          <Button
+                        className="bg-green-400"
+                        onClick={() => {
+                          console.log(imgSrc)
+                        }}
+                      >
+                        Use photo
+          </Button>
+          <Button
+                          className = "bg-blue-700 ml-5"
+                          onClick={capture}
+                        >
+                          Snap
+              </Button>
+          
+                      
+          { imgSrc ? (
+                          <>
+                          <Button
+                        
+                        class = "ml-5 bg-white rounded-md"
+                      
+                        onClick={retake}
+                      >
+                        Retake photo
+                      </Button>
+                      <Button
+                      color="gray"
+                      class="ml-5 bg-white rounded-md"
+                      onClick={retake}
+                    >
+                      Cancel
+        </Button>
+        </>
+          ) : (<></>)}
+          
+        </div>      
       </div>
-      <div class="result">
-        <canvas ref={photoRef}></canvas>
-        <button>Generate Pass</button>
-      </div>
-    </div>
+    </>
   );
 };
 

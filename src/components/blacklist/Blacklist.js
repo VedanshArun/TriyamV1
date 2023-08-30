@@ -6,7 +6,7 @@ import {Dropdown} from 'flowbite-react';
 const GeneratePass = () => {
      const [users,setUsers] = useState([]);
     const loadUsers = async () => {
-        const data = await api.getUsers();
+        const data = await api.getBlacklist();
         setUsers(
           data.map((user) => {
                 return {
@@ -15,7 +15,7 @@ const GeneratePass = () => {
                     images: user.images,
                     mobile: user.mobile,
                     address : user.address ,
-                    companyName : user.gatePasses[0].companyName,
+                    image : user.images[0],
                   }; 
           })
         );
@@ -65,12 +65,12 @@ const GeneratePass = () => {
                         </thead>
                         <tbody>
                             {users.map((visitor) => (
-                                <tr class="border-b dark:border-gray-700">
+                                <tr class="border-b dark:border-gray-700 justify-center items-center">
                                     <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{visitor.userId}</th>
                                     <td class="px-2 py-3">{visitor.name}</td>
                                     <td class="px-2 py-3">{visitor.mobile}</td>
                                     <td class="px-4 py-3">{visitor.address}</td>
-                                    <td class="px-4 py-3">{visitor.img}</td>
+                                    <td class="px-4 py-3"><img src={visitor.image} width={60} height={60} alt='Person image'/></td>
                                     <td class="px-4 py-3 flex items-center justify-end">
                                         <Dropdown
                                             inline
