@@ -1,142 +1,31 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React from 'react'
+import React, {useState , useEffect} from 'react'
+import api from '../../api';
+import {Dropdown} from 'flowbite-react';
 
 const GeneratePass = () => {
-    const dummyData = [
-        {
-            userID : 'x687s2nj',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : '2gigxhxn',
-            visitorName : 'Arnav Choudhary',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : 'zfxm99qs',
-            visitorName : 'Yash Jindal',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : 'npl9tqmr',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : '4o6vrn7a',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : '3rjuhrhd',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : 'x687s2nj',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : '2gigxhxn',
-            visitorName : 'Arnav Choudhary',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : 'zfxm99qs',
-            visitorName : 'Yash Jindal',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : 'npl9tqmr',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'New',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : '4o6vrn7a',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-        {
-            userID : '3rjuhrhd',
-            visitorName : 'Vedansh Arun',
-            phoneNumber : 8920984642,
-            visitingOfficer : 'Gt. Yash Jindal',
-            venue : 'Room 102 , Block A',
-            entryTime : '6:30:21',
-            exitTime : '7:45:22',
-            visitorType : 'Existing',
-            address : '317, Green leaf residency, sector 15 gurgaon, 122001',
-        },
-
-    ]
+     const [users,setUsers] = useState([]);
+    const loadUsers = async () => {
+        const data = await api.getUsers();
+        setUsers(
+          data.map((user) => {
+                return {
+                    userId: user._id,
+                    name: user.name,
+                    images: user.images,
+                    mobile: user.mobile,
+                    address : user.address ,
+                    companyName : user.gatePasses[0].companyName,
+                  }; 
+          })
+        );
+        console.log(users);
+      };
+      useEffect(() => {
+        (async () => {
+          await loadUsers();
+        })();
+      }, []);
 
     return (
         <section class="bg-gray-50 dark:bg-gray-900 p-3 sm:p-5">
@@ -163,7 +52,7 @@ const GeneratePass = () => {
                         {/* Add user and Filter button*/}
                        
                     </div>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto mb-10">
                     <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                             <tr>
@@ -175,32 +64,23 @@ const GeneratePass = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {dummyData.map((visitor) => (
+                            {users.map((visitor) => (
                                 <tr class="border-b dark:border-gray-700">
-                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{visitor.userID}</th>
-                                    <td class="px-2 py-3">{visitor.visitorName}</td>
-                                    <td class="px-2 py-3">{visitor.phoneNumber}</td>
+                                    <th scope="row" class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">{visitor.userId}</th>
+                                    <td class="px-2 py-3">{visitor.name}</td>
+                                    <td class="px-2 py-3">{visitor.mobile}</td>
                                     <td class="px-4 py-3">{visitor.address}</td>
                                     <td class="px-4 py-3">{visitor.img}</td>
                                     <td class="px-4 py-3 flex items-center justify-end">
-                                        <button id="apple-imac-27-dropdown-button" data-dropdown-toggle="apple-imac-27-dropdown" class="inline-flex items-center p-0.5 text-sm font-medium text-center text-gray-500 hover:text-gray-800 rounded-lg focus:outline-none dark:text-gray-400 dark:hover:text-gray-100" type="button">
-                                            <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                                <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
-                                            </svg>
-                                        </button>
-                                        <div id="apple-imac-27-dropdown" class="hidden z-10 w-44 bg-white rounded divide-y divide-gray-100 shadow dark:bg-gray-700 dark:divide-gray-600">
-                                            <ul class="py-1 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="apple-imac-27-dropdown-button">
-                                                <li>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Show</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="block py-2 px-4 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a>
-                                                </li>
-                                            </ul>
-                                            <div class="py-1">
-                                                <a href="#" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Delete</a>
-                                            </div>
-                                        </div>
+                                        <Dropdown
+                                            inline
+                                            label="Options"
+                                            placement="bottom"
+                                        >
+                                            <Dropdown.Item>
+                                            Remove from blacklist
+                                            </Dropdown.Item>
+                                        </Dropdown>
                                     </td>
                                 </tr>
                             ))}
@@ -209,7 +89,7 @@ const GeneratePass = () => {
                         </tbody>
                     </table>
                 </div>
-                <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
+                {/* <nav class="flex flex-col md:flex-row justify-between items-start md:items-center space-y-3 md:space-y-0 p-4" aria-label="Table navigation">
                     <span class="text-sm font-normal text-gray-500 dark:text-gray-400">
                         Showing
                         <span class="ml-2 mr-2 font-semibold text-gray-900 dark:text-white">1-10</span>
@@ -249,7 +129,7 @@ const GeneratePass = () => {
                             </a>
                         </li>
                     </ul>
-                </nav>
+                </nav> */}
             </div>
         </div>
         </section>
