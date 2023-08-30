@@ -25,27 +25,21 @@ export default {
   detectFaces: async function ({ imgSrc }) {
     const base64 = imgSrc; // Place your base64 url here.
     console.log(base64);
-    fetch(base64)
-      .then((res) => res.blob())
-      .then((blob) => {
-        console.log(blob);
-        console.log('........');
-        const formData = new FormData();
-        const file = new File([blob], 'filename.jpeg');
-        formData.append('image', file);
-        const token = localStorage.getItem('token');
-        const API_URL = `${baseUrl}/admin/detect-faces`;
-        fetch(API_URL, {
-          method: 'POST',
-          body: formData,
-          headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
-        })
-          .then((res) => res.json())
-          .then((res) => {
-            return res.data;
-            console.log(res);
-          });
-      });
+    let blob = await fetch(base64);
+    blob = await blob.blob();
+    console.log(blob);
+    const formData = new FormData();
+    const file = new File([blob], 'filename.jpeg');
+    formData.append('image', file);
+    const token = localStorage.getItem('token');
+    const API_URL = `${baseUrl}/admin/detect-faces`;
+    let res = await fetch(API_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    });
+    res = await res.json();
+    return res.data;
   },
 
   getRtspUrls: async function () {
