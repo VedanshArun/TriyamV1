@@ -22,22 +22,31 @@ export default {
     });
     return resp.data;
   },
-  detectFaces  : async function({image}){
-    const base64 = image; // Place your base64 url here.
+  detectFaces: async function ({ imgSrc }) {
+    const base64 = imgSrc; // Place your base64 url here.
+    console.log(base64);
     fetch(base64)
-    .then(res => res.blob())
-    .then(blob => {
-      const fd = new FormData();
-      const file = new File([blob], "filename.jpeg");
-      fd.append('image', file)
-      const token = localStorage.getItem('token');
-      const API_URL = `${baseUrl}/admin/detect-faces`
-      fetch(API_URL, {method: 'POST', body: fd, headers:  { ...(token ? { Authorization: `Bearer ${token}` } : {})}})
-      .then(res => res.json()) 
-      .then(res => {
-        return res.data ; 
-        console.log(res)});
-  })},
+      .then((res) => res.blob())
+      .then((blob) => {
+        console.log(blob);
+        console.log('........');
+        const formData = new FormData();
+        const file = new File([blob], 'filename.png');
+        formData.append('image', file);
+        const token = localStorage.getItem('token');
+        const API_URL = `${baseUrl}/admin/detect-faces`;
+        fetch(API_URL, {
+          method: 'POST',
+          body: formData,
+          headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+        })
+          .then((res) => res.json())
+          .then((res) => {
+            return res.data;
+            console.log(res);
+          });
+      });
+  },
 
   getRtspUrls: async function () {
     let resp = await apicall({
