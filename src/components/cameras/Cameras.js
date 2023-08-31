@@ -7,6 +7,9 @@ let player = null;
 
 const Cameras = () => {
   const [openModal, setOpenModal] = useState('');
+  const [openModal2 , setOpenModal2] = useState('');
+  const [previewRtsp , setPreviewRtsp] = useState(null);
+  const props2 = {openModal2 , setOpenModal2};
   const props = { openModal, setOpenModal };
   const [scanNew, setScanNew] = useState(false);
   const [camName, setCamName] = useState(null);
@@ -19,6 +22,7 @@ const Cameras = () => {
   const [zones, setZones] = useState([]);
   const [cameras, setCameras] = useState([]);
   const canvasRef = useRef(null);
+  const canvasRef2 = useRef(null);
 
   const getZones = async () => {
     const data = await api.fetchZones();
@@ -85,6 +89,26 @@ const Cameras = () => {
         const wsLink = await api.getStreamLink({ rtspLink: url });
         player = new JSMpeg.Player(wsLink, {
           canvas: document.getElementById('canvas'),
+          videoBufferSize: 1024 * 1024 * 16,
+        });
+      }
+      return <a></a>;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const startStream2 = async function (url) {
+    try {
+      if (url) {
+        console.log(url);
+        console.log(player);
+        if (player && player.stop) {
+          await player.stop();
+        }
+        const wsLink = await api.getStreamLink({ rtspLink: url });
+        player = new JSMpeg.Player(wsLink, {
+          canvas: document.getElementById('canvas2'),
           videoBufferSize: 1024 * 1024 * 16,
         });
       }
@@ -373,89 +397,7 @@ const Cameras = () => {
                     </Button>
                   </Modal.Footer>
                 </Modal>
-                <div
-                  id="filterDropdown"
-                  class="z-10 hidden w-48 p-3 bg-white rounded-lg shadow dark:bg-gray-700"
-                >
-                  <h6 class="mb-3 text-sm font-medium text-gray-900 dark:text-white">
-                    Choose brand
-                  </h6>
-                  <ul
-                    class="space-y-2 text-sm"
-                    aria-labelledby="filterDropdownButton"
-                  >
-                    <li class="flex items-center">
-                      <input
-                        id="apple"
-                        type="checkbox"
-                        value=""
-                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      ></input>
-                      <label
-                        for="apple"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Apple (56)
-                      </label>
-                    </li>
-                    <li class="flex items-center">
-                      <input
-                        id="fitbit"
-                        type="checkbox"
-                        value=""
-                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      ></input>
-                      <label
-                        for="fitbit"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Microsoft (16)
-                      </label>
-                    </li>
-                    <li class="flex items-center">
-                      <input
-                        id="razor"
-                        type="checkbox"
-                        value=""
-                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      ></input>
-                      <label
-                        for="razor"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Razor (49)
-                      </label>
-                    </li>
-                    <li class="flex items-center">
-                      <input
-                        id="nikon"
-                        type="checkbox"
-                        value=""
-                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      ></input>
-                      <label
-                        for="nikon"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        Nikon (12)
-                      </label>
-                    </li>
-                    <li class="flex items-center">
-                      <input
-                        id="benq"
-                        type="checkbox"
-                        value=""
-                        class="w-4 h-4 bg-gray-100 border-gray-300 rounded text-primary-600 focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
-                      ></input>
-                      <label
-                        for="benq"
-                        class="ml-2 text-sm font-medium text-gray-900 dark:text-gray-100"
-                      >
-                        BenQ (74)
-                      </label>
-                    </li>
-                  </ul>
-                </div>
+                
               </div>
             </div>
           </div>
@@ -475,6 +417,7 @@ const Cameras = () => {
                   <th scope="col" class="px-2 py-3">
                     Zone IDS
                   </th>
+                  <th scope='col' className='px-2 py-3'>Preview</th>
                   
                 </tr>
               </thead>
@@ -490,7 +433,47 @@ const Cameras = () => {
                     <td class="px-2 py-3">{camera.description}</td>
                     <td class="px-2 py-3">{camera.rtsplink}</td>
                     <td class="px-4 py-3">{camera.zoneIDs}</td>
+                    <td className='px-4 py-3'>
+                      <Button
+                              color = "gray"
+                              onClick={() => {
+                              setPreviewRtsp(camera.rtspLink);
+                              startStream2(camera.rtspLink);
+                              props2.setOpenModal2('default');               
+                          }}
+                          >
+                              Preview
+                      </Button>
+
+                    </td>
+                    <Modal show={props2.openModal2 === 'default'}
+                        onClose={() => props2.setOpenModal2(undefined)}>
+                          <Modal.Header>Camera Preview</Modal.Header>
+                        <Modal.Body>
+                          <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
+                            <div class="sm:col-span-6">
+                              <canvas
+                                id="canvas2"
+                                ref={canvasRef2}
+                                className="ml-auto mr-auto w-[300px] h-[300px]"
+                              />
+                            </div>
+                          </div>
+                        </Modal.Body>
+                        <Modal.Footer>
                     
+                    <Button
+                      color="gray"
+                      onClick={() => {
+                        setPreviewRtsp(null);
+                        props2.setOpenModal2(undefined);
+                      }}
+                    >
+                      Close
+                    </Button>
+                  </Modal.Footer>
+
+                    </Modal>
                   </tr>
                 ))}
               </tbody>
