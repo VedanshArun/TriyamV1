@@ -2,8 +2,8 @@
 /* eslint-disable eqeqeq */
 // const baseUrl =
 //   'https://948e-2405-201-4028-5811-9066-1182-e5c-b4b3.ngrok-free.app';
-// const baseUrl = 'http://172.20.10.4:3000';
-const baseUrl = 'https://ecb7-110-224-226-69.ngrok-free.app';
+const baseUrl = 'http://172.20.10.4:3000';
+// const baseUrl = 'https://ecb7-110-224-226-69.ngrok-free.app';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {

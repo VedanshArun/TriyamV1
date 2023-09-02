@@ -8,10 +8,10 @@ import api from '../../api';
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [openModal, setOpenModal] = useState('');
-  const [openModal2 , setOpenModal2] = useState('');
+  const [openModal2, setOpenModal2] = useState('');
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
-  const [image , setImage] = useState(null);
+  const [image, setImage] = useState(null);
   const [zoneIds, setZoneIds] = useState([]);
   const [aadhaarNumber, setAadhaar] = useState('');
   const [email, setEmail] = useState('');
@@ -20,9 +20,7 @@ const Users = () => {
   const [designation, setDesignation] = useState('');
   const [zones, setZones] = useState([]);
   const props = { openModal, setOpenModal };
-  const props2 = {openModal2 , setOpenModal2} ; 
-  
-
+  const props2 = { openModal2, setOpenModal2 };
 
   const handleOK = async () => {
     await api.addUser({
@@ -35,7 +33,7 @@ const Users = () => {
       designation: designation,
       email: email,
       zoneIds: zoneIds,
-      image : image ,
+      image: image,
     });
     await loadUsers();
   };
@@ -119,9 +117,7 @@ const Users = () => {
                 <Modal.Header>Add a new user</Modal.Header>
                 <Modal.Body>
                   <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
-                    <div class="sm:col-span-6">
-                      
-                    </div>
+                    <div class="sm:col-span-6"></div>
                     {/* <div class="sm:col-span-3">
                         <label
                         for="name"
@@ -318,97 +314,138 @@ const Users = () => {
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <><tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <th
-                      scope="row"
-                      class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {user.name}
-                    </th>
-                    <td class="px-4 py-2">
-                      <span class="bg-primary-100 text-primary-800 font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">
-                        {user.designation}
-                      </span>
-                    </td>
-                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      <div className="flex flex-col">
-                        {user.vehicles.map((vehicle) => (
-                          <p>{vehicle.vehicleNumber}</p>
-                        ))}
-                      </div>
-                    </td>
-                    <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                      <div className="flex flex-col">
-                        {user.zones.map((zone) => (
-                          <p>{zone.name}</p>
-                        ))}
-                      </div>
-                    </td>
-                    <td class="px-4 py-3 flex items-center justify-center">
-                      <Dropdown inline label="Options" placement="bottom">
-                        <Dropdown.Item
-                          onClick={async () => {
-                            await api.updateUser({
-                              type: 'BLACKLISTED',
-                              _id: user.userID,
-                            });
-                            await loadUsers();
-                          } }
-                        >
-                          Blacklist User
-                        </Dropdown.Item>
-                        <Dropdown.Item>
-                          <button
-                            onClick={() => {
-                              props2.setOpenModal2('placement');
-                            } }
+                  <>
+                    <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                      <th
+                        scope="row"
+                        class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {user.name}
+                      </th>
+                      <td class="px-4 py-2">
+                        <span class="bg-primary-100 text-primary-800 font-medium px-2 py-0.5 rounded dark:bg-primary-900 dark:text-primary-300">
+                          {user.designation}
+                        </span>
+                      </td>
+                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <div className="flex flex-col">
+                          {user.vehicles.map((vehicle) => (
+                            <p>{vehicle.vehicleNumber}</p>
+                          ))}
+                        </div>
+                      </td>
+                      <td class="px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <div className="flex flex-col">
+                          {user.zones.map((zone) => (
+                            <p>{zone.name}</p>
+                          ))}
+                        </div>
+                      </td>
+                      <td class="px-4 py-3 flex items-center justify-center">
+                        <Dropdown inline label="Options" placement="bottom">
+                          <Dropdown.Item
+                            onClick={async () => {
+                              await api.updateUser({
+                                type: 'BLACKLISTED',
+                                _id: user.userID,
+                              });
+                              await loadUsers();
+                            }}
                           >
-                            View Details
-                          </button>
-
-                        </Dropdown.Item>
-                      </Dropdown>
-                    </td>
-                  </tr>
-                  <Modal
-                    position="top-center"
-                    show={props2.openModal2 === 'placement'}
-                    onClose={() => props2.setOpenModal2(undefined)}
-                  >
+                            Blacklist User
+                          </Dropdown.Item>
+                          <Dropdown.Item>
+                            <button
+                              onClick={() => {
+                                props2.setOpenModal2('placement');
+                              }}
+                            >
+                              View Details
+                            </button>
+                          </Dropdown.Item>
+                        </Dropdown>
+                      </td>
+                    </tr>
+                    <Modal
+                      position="top-center"
+                      show={props2.openModal2 === 'placement'}
+                      onClose={() => props2.setOpenModal2(undefined)}
+                    >
                       <Modal.Header>User Details</Modal.Header>
                       <Modal.Body>
-                        <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">      
+                        <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
                           <div class="sm:col-span-3 justify-center items-center w-full md:h-full">
                             <div class="w-full max-w-xl h-full md:h-auto">
                               <div class="bg-white rounded-lg ">
-                                      
-                                      <div class="flex justify-between mb-4 rounded-t sm:mb-5">
-                                          <div class="text-lg text-gray-900 md:text-xl dark:text-white">
-                                              <h3 class="font-semibold ">
-                                                  {user.name}
-                                              </h3>
-                                              <p class="text-gray-500 text-sm">
-                                                  User ID : {user.userID}
-                                              </p>
-                                          </div>   
-                                      </div>
-                                      <dl className='mt-5'>
-                                          <dt class="mb-2 font-semibold leading-none text-xl text-gray-900 dark:text-white">Details</dt>
-                                          <dd class="mt-5 mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Phone Number : </span>{user.mobile}</dd>
-                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Email : </span>{user.email}</dd>
-                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Aadhaar : </span>{user.aadhaarNumber}</dd>
-                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Address : </span>{user.address}</dd>
-                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Designation : </span>{user.designation}</dd>
-                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Vehicles : </span>{user.vehicles.map((vehicle) => {<p>{vehicle.vehicleNumber}</p>})}</dd>
-                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Zones : </span>{user.zones.map((zone) => { return (<p>{zone.zoneId}</p>)})}</dd>
-                                      </dl>
-                                     
+                                <div class="flex justify-between mb-4 rounded-t sm:mb-5">
+                                  <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                                    <h3 class="font-semibold ">{user.name}</h3>
+                                    <p class="text-gray-500 text-sm">
+                                      User ID : {user.userID}
+                                    </p>
+                                  </div>
+                                </div>
+                                <dl className="mt-5">
+                                  <dt class="mb-2 font-semibold leading-none text-xl text-gray-900 dark:text-white">
+                                    Details
+                                  </dt>
+                                  <dd class="mt-5 mb-2 font-light text-gray-500  dark:text-gray-400">
+                                    <span className=" font-medium text-[#000000]">
+                                      Phone Number :{' '}
+                                    </span>
+                                    {user.mobile}
+                                  </dd>
+                                  <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                                    <span className=" font-medium text-[#000000]">
+                                      Email :{' '}
+                                    </span>
+                                    {user.email}
+                                  </dd>
+                                  <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                                    <span className=" font-medium text-[#000000]">
+                                      Aadhaar :{' '}
+                                    </span>
+                                    {user.aadhaarNumber}
+                                  </dd>
+                                  <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                                    <span className=" font-medium text-[#000000]">
+                                      Address :{' '}
+                                    </span>
+                                    {user.address}
+                                  </dd>
+                                  <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                                    <span className=" font-medium text-[#000000]">
+                                      Designation :{' '}
+                                    </span>
+                                    {user.designation}
+                                  </dd>
+                                  <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                                    <span className=" font-medium text-[#000000]">
+                                      Vehicles :{' '}
+                                    </span>
+                                    {user.vehicles.map((vehicle) => {
+                                      return <p>{vehicle.vehicleNumber}</p>;
+                                    })}
+                                  </dd>
+                                  <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                                    <span className=" font-medium text-[#000000]">
+                                      Zones :{' '}
+                                    </span>
+                                    {user.zones.map((zone) => {
+                                      return <p>{zone._id}</p>;
+                                    })}
+                                  </dd>
+                                </dl>
                               </div>
                             </div>
                           </div>
                           <div class="sm:col-span-3 justify-center items-center w-full md:h-full">
-                            <img src={user.images} alt= "user image" className='w-[300px] h-[400px] object-cover' />
-                          </div>   
+                            <img
+                              src={user.images}
+                              alt="user image"
+                              className="w-[300px] h-[400px] object-cover"
+                            />
+                          </div>
                         </div>
                       </Modal.Body>
                       <Modal.Footer>
@@ -419,8 +456,8 @@ const Users = () => {
                           Close
                         </Button>
                       </Modal.Footer>
-                    </Modal></>
-
+                    </Modal>
+                  </>
                 ))}
               </tbody>
             </table>
