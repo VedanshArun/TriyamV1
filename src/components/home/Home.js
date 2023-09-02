@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Button, Modal } from 'flowbite-react';
 import Webcam from 'react-webcam';
 import './Home.css';
+import api from '../../api';
 
 const Home = () => {
   const webcamRef = useRef(null);
@@ -24,6 +25,7 @@ const Home = () => {
             <img src={imgSrc} alt="webcam" />
           ) : (
             <Webcam
+              screenshotFormat="image/jpeg"
               className="w-3/4 flex justify-center items-center"
               height={400}
               width={400}
@@ -34,8 +36,10 @@ const Home = () => {
         <div class=" bottom-0 flex justify-center items-center mt-5">
           <Button
             className="bg-green-400"
-            onClick={() => {
+            onClick={async () => {
               console.log(imgSrc);
+              const data = await api.detectFaces({ imgSrc });
+              console.log(data);
             }}
           >
             Use photo
