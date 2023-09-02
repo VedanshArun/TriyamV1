@@ -8,8 +8,10 @@ import api from '../../api';
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [openModal, setOpenModal] = useState('');
+  const [openModal2 , setOpenModal2] = useState('');
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
+  const [image , setImage] = useState(null);
   const [zoneIds, setZoneIds] = useState([]);
   const [aadhaarNumber, setAadhaar] = useState('');
   const [email, setEmail] = useState('');
@@ -18,13 +20,10 @@ const Users = () => {
   const [designation, setDesignation] = useState('');
   const [zones, setZones] = useState([]);
   const props = { openModal, setOpenModal };
-  const [file, setFile] = useState(null);
-  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-      console.log(file);
-    }
-  };
+  const props2 = {openModal2 , setOpenModal2} ; 
+  
+
+
   const handleOK = async () => {
     await api.addUser({
       name: name,
@@ -36,6 +35,7 @@ const Users = () => {
       designation: designation,
       email: email,
       zoneIds: zoneIds,
+      image : image ,
     });
     await loadUsers();
   };
@@ -120,12 +120,7 @@ const Users = () => {
                 <Modal.Body>
                   <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
                     <div class="sm:col-span-6">
-                      <div className="" id="fileUpload">
-                        <div className="mb-2 block">
-                          <Label htmlFor="file" value="Upload Image" />
-                        </div>
-                        <FileInput id="file" onChange={handleFileUpload} />
-                      </div>
+                      
                     </div>
                     {/* <div class="sm:col-span-3">
                         <label
@@ -323,7 +318,7 @@ const Users = () => {
               </thead>
               <tbody>
                 {users.map((user) => (
-                  <tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
+                  <><tr class="border-b dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">
                     <th
                       scope="row"
                       class="flex items-center px-4 py-2 font-medium text-gray-900 whitespace-nowrap dark:text-white"
@@ -358,13 +353,71 @@ const Users = () => {
                               _id: user.userID,
                             });
                             await loadUsers();
-                          }}
+                          } }
                         >
                           Blacklist User
+                        </Dropdown.Item>
+                        <Dropdown.Item>
+                          <button
+                            onClick={() => {
+                              props2.setOpenModal2('placement');
+                            } }
+                          >
+                            View Details
+                          </button>
+
                         </Dropdown.Item>
                       </Dropdown>
                     </td>
                   </tr>
+                  <Modal
+                    position="top-center"
+                    show={props2.openModal2 === 'placement'}
+                    onClose={() => props2.setOpenModal2(undefined)}
+                  >
+                      <Modal.Header>User Details</Modal.Header>
+                      <Modal.Body>
+                        <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">      
+                          <div class="sm:col-span-6 justify-center items-center w-full md:h-full">
+                            <div class="w-full max-w-xl h-full md:h-auto">
+                              <div class="bg-white rounded-lg ">
+                                      
+                                      <div class="flex justify-between mb-4 rounded-t sm:mb-5">
+                                          <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                                              <h3 class="font-semibold ">
+                                                  {user.name}
+                                              </h3>
+                                              <p class="text-gray-500 text-sm">
+                                                  User ID : {user.userID}
+                                              </p>
+                                          </div>   
+                                      </div>
+                                      <dl className='mt-5'>
+                                          <dt class="mb-2 font-semibold leading-none text-xl text-gray-900 dark:text-white">Details</dt>
+                                          <dd class="mt-5 mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Phone Number : </span>{user.mobile}</dd>
+                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Email : </span>{user.email}</dd>
+                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Aadhaar : </span>{user.aadhaarNumber}</dd>
+                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Address : </span>{user.address}</dd>
+                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Designation : </span>{user.designation}</dd>
+                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Vehicles : </span>{user.vehicles.map((vehicle) => {<p>{vehicle.vehicleNumber}</p>})}</dd>
+                                          <dd class="mb-2 font-light text-gray-500  dark:text-gray-400"><span className=" font-medium text-[#000000]">Zones : </span>{user.zones.map((zone) => { return (<p>{zone.zoneId}</p>)})}</dd>
+                                      </dl>
+                                     
+                              </div>
+                            </div>
+                          </div>  
+                        </div>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button
+                          color="gray"
+                          onClick={() => props2.setOpenModal2(undefined)}
+                        >
+                          Close
+                        </Button>
+                      </Modal.Footer>
+                    </Modal></>
+
                 ))}
               </tbody>
             </table>
