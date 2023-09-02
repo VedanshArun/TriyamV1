@@ -20,6 +20,18 @@ import Users from '../users/Users';
 import GeneratePass from '../pass/GeneratePass';
 import bss_logo from '../../assets/bss_logo.png';
 import api from '../../api.js';
+import { Layout, Menu, Button, Form, Input, Row, Checkbox } from 'antd';
+import logoBlack from '../../assets/logo-black.png';
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  UploadOutlined,
+  SettingOutlined,
+  VideoCameraOutlined,
+  ZoomInOutlined,
+  LockOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
 
 const components = {
   1: <Home></Home>,
@@ -34,8 +46,26 @@ const components = {
 
 const Main = () => {
   const [render, updateRender] = useState(8);
+
+  const [token, setToken] = useState(false);
+
   const handleMenuClick = (key) => {
     updateRender(key);
+  };
+
+  const onFinish = async (values) => {
+    try {
+      console.log('Success:', values);
+      const { token } = await api.login(values);
+      localStorage.setItem('token', token);
+      setToken(token);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onFinishFailed = (errorInfo) => {
+    alert('Incorrect login id password.');
   };
 
   return (
@@ -58,117 +88,214 @@ const Main = () => {
 
       {/*Side bar */}
 
-      <aside
-        class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
-        aria-label="Sidenav"
-        id="drawer-navigation"
-      >
-        <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
-          <ul class="space-y-2">
-            <li>
-              <a
-                href="#"
-                onClick={() => handleMenuClick(1)}
-                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <div className="inline-flex justify-center items-center">
-                  <BiCameraHome className="w-5 h-5" />
-                  <span class="ml-3">Home</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => handleMenuClick(2)}
-                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <div className="inline-flex justify-center items-center">
-                  <TbCurrentLocation className="w-5 h-5" />
-                  <span class="ml-3">Cameras</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => handleMenuClick(3)}
-                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <div className="inline-flex justify-center items-center">
-                  <FaRegUser className="w-5 h-5" />
-                  <span class="ml-3">Zones</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => handleMenuClick(4)}
-                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <div className="inline-flex justify-center items-center">
-                  <MdOutlineDangerous className="w-5 h-5" />
-                  <span class="ml-3">Users</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => handleMenuClick(5)}
-                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <div className="inline-flex justify-center items-center">
-                  <HiOutlineUserGroup className="h-5 w-5" />
-                  <span class="ml-3">Blacklist</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => handleMenuClick(6)}
-                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <div className="inline-flex justify-center items-center">
-                  <AiOutlineAlert className="h-5 w-5" />
-                  <span class="ml-3">Visitors</span>
-                </div>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                onClick={() => handleMenuClick(7)}
-                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <div className="inline-flex justify-center items-center">
-                  <AiOutlineAlert className="h-5 w-5" />
-                  <span class="ml-3">Alerts</span>
-                </div>
-              </a>
-            </li>
-          </ul>
-          <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
-            <li>
-              <a
-                href="#"
-                onClick={() => handleMenuClick(8)}
-                class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <div className="inline-flex justify-center items-center">
-                  <RiPassportLine className="h-5 w-5" />
-                  <span class="ml-3">Visitor Pass</span>
-                </div>
-              </a>
-            </li>
-          </ul>
+      {token ? (
+        <div>
+          <aside
+            class="fixed top-0 left-0 z-40 w-64 h-screen pt-14 transition-transform -translate-x-full bg-white border-r border-gray-200 md:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
+            aria-label="Sidenav"
+            id="drawer-navigation"
+          >
+            <div class="overflow-y-auto py-5 px-3 h-full bg-white dark:bg-gray-800">
+              <ul class="space-y-2">
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(1)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <BiCameraHome className="w-5 h-5" />
+                      <span class="ml-3">Home</span>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(2)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <TbCurrentLocation className="w-5 h-5" />
+                      <span class="ml-3">Cameras</span>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(3)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <FaRegUser className="w-5 h-5" />
+                      <span class="ml-3">Zones</span>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(4)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <MdOutlineDangerous className="w-5 h-5" />
+                      <span class="ml-3">Users</span>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(5)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <HiOutlineUserGroup className="h-5 w-5" />
+                      <span class="ml-3">Blacklist</span>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(6)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <AiOutlineAlert className="h-5 w-5" />
+                      <span class="ml-3">Visitors</span>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(7)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <AiOutlineAlert className="h-5 w-5" />
+                      <span class="ml-3">Alerts</span>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+              <ul class="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(8)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <RiPassportLine className="h-5 w-5" />
+                      <span class="ml-3">Visitor Pass</span>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+          <main class="p-4 bg-[#F9FAFB] md:ml-64 h-auto pt-20">
+            {components[render]}
+          </main>
         </div>
-      </aside>
-      <main class="p-4 bg-[#F9FAFB] md:ml-64 h-auto pt-20">
-        {components[render]}
-      </main>
+      ) : (
+        <Layout style={{ background: '#F5F5F5', height: '100vh' }}>
+          <Row
+            type="flex"
+            justify="center"
+            align="middle"
+            style={{ minHeight: '100vh' }}
+          >
+            <Form
+              name="normal_login"
+              className="login-form"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+            >
+              <Form.Item
+                style={{
+                  textAlign: 'center',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                }}
+              >
+                <img
+                  src={logoBlack}
+                  width={240}
+                  size="contain"
+                  alt="bss-logo"
+                  style={{ marginRight: 10, marginLeft: 20 }}
+                />
+              </Form.Item>
+              <Form.Item
+                name="username"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Username!',
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<UserOutlined className="site-form-item-icon" />}
+                  placeholder="Username"
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please input your Password!',
+                  },
+                ]}
+              >
+                <Input
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  placeholder="Password"
+                />
+              </Form.Item>
+              <Form.Item>
+                <Form.Item
+                  name="remember"
+                  valuePropName="checked"
+                  style={{
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    alignContent: 'center',
+                  }}
+                >
+                  <Checkbox>Remember me</Checkbox>
+                </Form.Item>
+              </Form.Item>
+              <Form.Item
+                style={{
+                  textAlign: 'center',
+                  justifyContent: 'center',
+                  alignContent: 'center',
+                }}
+              >
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  className="login-form-button"
+                  style={{ background: 'blue', borderColor: 'blue' }}
+                >
+                  Log in
+                </Button>
+              </Form.Item>
+            </Form>
+          </Row>
+        </Layout>
+      )}
     </div>
   );
 };

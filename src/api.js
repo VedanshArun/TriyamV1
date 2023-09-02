@@ -8,6 +8,14 @@ const baseUrl = 'http://172.20.10.4:3000';
 
 // eslint-disable-next-line import/no-anonymous-default-export
 export default {
+  login: async ({ username, password }) => {
+    let resp = await apicall({
+      url: `${baseUrl}/auth/login/admin`,
+      data: { username, password },
+    });
+
+    return resp.data;
+  },
   fetchZones: async function () {
     let resp = await apicall({
       url: `${baseUrl}/admin/zones`,
