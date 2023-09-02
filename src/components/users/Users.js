@@ -407,7 +407,7 @@ const Users = () => {
                             </div>
                           </div>
                           <div class="sm:col-span-3 justify-center items-center w-full md:h-full">
-                            <img src={user.image} alt=
+                            <img src={user.images} alt= "user image" className='w-[300px] h-[400px] object-cover' />
                           </div>   
                         </div>
                       </Modal.Body>
