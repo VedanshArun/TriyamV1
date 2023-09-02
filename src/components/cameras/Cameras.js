@@ -4,12 +4,13 @@ import { Button, Modal } from 'flowbite-react';
 import api from '../../api';
 import JSMpeg from '@cycjimmy/jsmpeg-player';
 let player = null;
+let player2 = null;
 
 const Cameras = () => {
   const [openModal, setOpenModal] = useState('');
-  const [openModal2 , setOpenModal2] = useState('');
-  const [previewRtsp , setPreviewRtsp] = useState(null);
-  const props2 = {openModal2 , setOpenModal2};
+  const [openModal2, setOpenModal2] = useState('');
+  const [previewRtsp, setPreviewRtsp] = useState(null);
+  const props2 = { openModal2, setOpenModal2 };
   const props = { openModal, setOpenModal };
   const [scanNew, setScanNew] = useState(false);
   const [camName, setCamName] = useState(null);
@@ -102,12 +103,12 @@ const Cameras = () => {
     try {
       if (url) {
         console.log(url);
-        console.log(player);
-        if (player && player.stop) {
-          await player.stop();
+        console.log(player2);
+        if (player2 && player2.stop) {
+          await player2.stop();
         }
         const wsLink = await api.getStreamLink({ rtspLink: url });
-        player = new JSMpeg.Player(wsLink, {
+        player2 = new JSMpeg.Player(wsLink, {
           canvas: document.getElementById('canvas2'),
           videoBufferSize: 1024 * 1024 * 16,
         });
@@ -397,7 +398,6 @@ const Cameras = () => {
                     </Button>
                   </Modal.Footer>
                 </Modal>
-                
               </div>
             </div>
           </div>
@@ -417,64 +417,79 @@ const Cameras = () => {
                   <th scope="col" class="px-2 py-3">
                     Zone IDS
                   </th>
-                  <th scope='col' className='px-2 py-3'>Preview</th>
-                  
+                  <th scope="col" className="px-2 py-3">
+                    Preview
+                  </th>
                 </tr>
               </thead>
               <tbody>
                 {cameras.map((camera) => (
-                  <tr class="border-b dark:border-gray-700">
-                    <th
-                      scope="row"
-                      class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {camera.name}
-                    </th>
-                    <td class="px-2 py-3">{camera.description}</td>
-                    <td class="px-2 py-3">{camera.rtsplink}</td>
-                    <td class="px-4 py-3">{camera.zoneIDs}</td>
-                    <td className='px-4 py-3'>
-                      <Button
-                              color = "gray"
-                              onClick={() => {
-                              setPreviewRtsp(camera.rtspLink);
-                              startStream2(camera.rtspLink);
-                              props2.setOpenModal2('default');               
+                  <>
+                    <tr class="border-b dark:border-gray-700">
+                      <th
+                        scope="row"
+                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {camera.name}
+                      </th>
+                      <td class="px-2 py-3">{camera.description}</td>
+                      <td class="px-2 py-3">{camera.rtsplink}</td>
+                      <td class="px-4 py-3">{camera.zoneIDs}</td>
+                      <td className="px-4 py-3">
+                        <Button
+                          color="gray"
+                          onClick={async () => {
+                            console.log(canvasRef2);
+                            console.log('.........');
+                            console.log(camera.rtsplink);
+                            setPreviewRtsp(camera.rtsplink);
+                            props2.setOpenModal2('default');
                           }}
-                          >
-                              Preview
-                      </Button>
-
-                    </td>
-                    <Modal show={props2.openModal2 === 'default'}
-                        onClose={() => props2.setOpenModal2(undefined)}>
-                          <Modal.Header>Camera Preview</Modal.Header>
-                        <Modal.Body>
-                          <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
-                            <div class="sm:col-span-6">
-                              <canvas
-                                id="canvas2"
-                                ref={canvasRef2}
-                                className="ml-auto mr-auto w-[300px] h-[300px]"
-                              />
-                            </div>
-                          </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                    
-                    <Button
-                      color="gray"
-                      onClick={() => {
-                        setPreviewRtsp(null);
-                        props2.setOpenModal2(undefined);
-                      }}
+                        >
+                          Preview
+                        </Button>
+                      </td>
+                    </tr>
+                    <Modal
+                      show={props2.openModal2 === 'default'}
+                      onClose={() => props2.setOpenModal2(undefined)}
                     >
-                      Close
-                    </Button>
-                  </Modal.Footer>
-
+                      <Modal.Header>Camera Preview</Modal.Header>
+                      <Modal.Body>
+                        <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
+                          <div class="sm:col-span-6 flex justify-center items-center">
+                            <Button
+                              className="bg-blue-700"
+                              onClick={() => {
+                                console.log(canvasRef2);
+                                console.log('#######');
+                                startStream2(previewRtsp);
+                              }}
+                            >
+                              Start Preview
+                            </Button>
+                            <Button
+                              className="ml-5"
+                              color="gray"
+                              onClick={() => {
+                                setPreviewRtsp(null);
+                                props2.setOpenModal2(undefined);
+                              }}
+                            >
+                              Close
+                            </Button>
+                          </div>
+                          <div class="sm:col-span-6">
+                            <canvas
+                              id="canvas2"
+                              ref={canvasRef2}
+                              className=" w-[300px] h-[300px]"
+                            />
+                          </div>
+                        </div>
+                      </Modal.Body>
                     </Modal>
-                  </tr>
+                  </>
                 ))}
               </tbody>
             </table>

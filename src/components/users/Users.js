@@ -15,10 +15,30 @@ const Users = () => {
   const [email, setEmail] = useState('');
   const [vehicles, setVehicles] = useState([]);
   const [address, setAddress] = useState('');
-  const [type, setType] = useState('');
   const [designation, setDesignation] = useState('');
   const [zones, setZones] = useState([]);
   const props = { openModal, setOpenModal };
+  const [file, setFile] = useState(null);
+  const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+      console.log(file);
+    }
+  };
+  const handleOK = async () => {
+    await api.addUser({
+      name: name,
+      address: address,
+      mobile: mobile,
+      type: 'EMPLOYEE',
+      vehicles: [{ vehicleNumber: vehicles }],
+      aadhaarNumber: aadhaarNumber,
+      designation: designation,
+      email: email,
+      zoneIds: zoneIds,
+    });
+    await loadUsers();
+  };
   const loadUsers = async () => {
     const data = await api.getUsers();
     setUsers(
@@ -70,6 +90,7 @@ const Users = () => {
             <div class=" flex flex-col flex-shrink-0 space-y-3 md:flex-row md:items-center lg:justify-end md:space-y-0 md:space-x-3">
               <Button
                 onClick={() => {
+                  getZones();
                   props.setOpenModal('placement');
                 }}
                 type="button"
@@ -103,7 +124,7 @@ const Users = () => {
                         <div className="mb-2 block">
                           <Label htmlFor="file" value="Upload Image" />
                         </div>
-                        <FileInput id="file" />
+                        <FileInput id="file" onChange={handleFileUpload} />
                       </div>
                     </div>
                     {/* <div class="sm:col-span-3">
@@ -233,8 +254,16 @@ const Users = () => {
                         id="category"
                         defaultValue={''}
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        onChange={(data) => setZones(data.target.value)}
-                      ></select>
+                        onChange={(data) => setZoneIds(data.target.value)}
+                      >
+                        {zones.map((zone) => {
+                          return (
+                            <option selected="" value={zone.name}>
+                              {zone.name}
+                            </option>
+                          );
+                        })}
+                      </select>
                     </div>
                     <div class="sm:col-span-6">
                       <label

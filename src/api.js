@@ -2,7 +2,7 @@
 /* eslint-disable eqeqeq */
 // const baseUrl =
 //   'https://948e-2405-201-4028-5811-9066-1182-e5c-b4b3.ngrok-free.app';
-const baseUrl = 'http://192.168.29.183:3000';
+const baseUrl = 'http://192.168.29.231:3000';
 // const baseUrl =
 //   'http://dd01-2405-201-4028-5811-fc87-6ab5-299a-9ee8.ngrok-free.app';
 
@@ -131,6 +131,8 @@ export default {
     vehicles = [],
     type,
     zoneIds,
+    email,
+    designation,
   }) => {
     const base64 = imgSrc; // Place your base64 url here.
     console.log(base64);
@@ -142,7 +144,8 @@ export default {
     formData.append('image', file);
     formData.append('type', type);
     formData.append('name', name);
-
+    formData.append('designation', designation);
+    formData.append('email', email);
     formData.append('mobile', mobile);
     formData.append('vehicles', JSON.stringify(vehicles));
 
