@@ -378,7 +378,7 @@ const Users = () => {
                       <Modal.Header>User Details</Modal.Header>
                       <Modal.Body>
                         <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">      
-                          <div class="sm:col-span-6 justify-center items-center w-full md:h-full">
+                          <div class="sm:col-span-3 justify-center items-center w-full md:h-full">
                             <div class="w-full max-w-xl h-full md:h-auto">
                               <div class="bg-white rounded-lg ">
                                       
@@ -405,7 +405,10 @@ const Users = () => {
                                      
                               </div>
                             </div>
-                          </div>  
+                          </div>
+                          <div class="sm:col-span-3 justify-center items-center w-full md:h-full">
+                            <img src={user.image} alt=
+                          </div>   
                         </div>
                       </Modal.Body>
                       <Modal.Footer>
