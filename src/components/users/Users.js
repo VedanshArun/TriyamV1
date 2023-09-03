@@ -3,7 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, FileInput, Label, input } from 'flowbite-react';
 import { Dropdown } from 'flowbite-react';
+import { MultiSelect } from "react-multi-select-component";
 import api from '../../api';
+const options = [] ; 
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -147,7 +149,7 @@ const Users = () => {
                         onChange={(value) => {
                           console.log(value);
                           setFile(value?.target?.files[0]);
-                          console.log(file);
+                          // console.log(file);
                         }}
                       ></input>
                       <label

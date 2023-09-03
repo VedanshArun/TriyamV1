@@ -7,6 +7,7 @@ let player = null;
 let player2 = null;
 
 const Cameras = () => {
+  
   const [openModal, setOpenModal] = useState('');
   const [openModal2, setOpenModal2] = useState('');
   const [previewRtsp, setPreviewRtsp] = useState(null);
@@ -97,7 +98,8 @@ const Cameras = () => {
         if (player && player.stop) {
           await player.stop();
         }
-        const wsLink = await api.getStreamLink({ rtspLink: url });
+        // const wsLink = await api.getStreamLink({ rtspLink: url });
+        const wsLink = 'https://youtu.be/vBpQ1SlfVtU';
         player = new JSMpeg.Player(wsLink, {
           canvas: document.getElementById('canvas'),
           videoBufferSize: 1024 * 1024 * 16,
@@ -452,7 +454,7 @@ const Cameras = () => {
                         <Button
                           color="gray"
                           onClick={async () => {
-                            console.log(canvasRef2);
+                            console.log(canvasRef);
                             console.log('.........');
                             console.log(camera.rtsplink);
                             setPreviewRtsp(camera.rtsplink);
@@ -470,33 +472,34 @@ const Cameras = () => {
                       <Modal.Header>Camera Preview</Modal.Header>
                       <Modal.Body>
                         <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
-                          <div class="sm:col-span-6 flex justify-center items-center">
-                            <Button
-                              className="bg-blue-700"
-                              onClick={() => {
-                                console.log(canvasRef2);
-                                console.log('#######');
-                                setStartPreview(true);
-                                // startStream2(previewRtsp);
-                              }}
-                            >
-                              Start Preview
-                            </Button>
-                            <Button
-                              className="ml-5"
-                              color="gray"
-                              onClick={() => {
-                                setPreviewRtsp(null);
-                                props2.setOpenModal2(undefined);
-                              }}
-                            >
-                              Close
-                            </Button>
-                          </div>
                           <div class="sm:col-span-6">
-                            <video width="750" height="500" controls>
-                              <source src="ws://172.20.10.4:5138" />
-                            </video>
+                            <label
+                              for="category"
+                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                            >
+                              Select RTSP Link
+                            </label>
+                            <select
+                              id="rtsp"
+                              onChange={(data) => {
+                                console.log(canvasRef);
+                                console.log('........');
+                                startStream(data.target.value);
+                                setCurrentRtspLink(data.target.value);
+                              }}
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            >
+                              {rtspLinks.map((link) => {
+                                return <option value={link}>{link}</option>;
+                              })}
+                            </select>
+                          </div>    
+                          <div class="sm:col-span-6">
+                            <canvas
+                              id="canvas"
+                              ref={canvasRef}
+                              className="ml-auto mr-auto w-[300px] h-[300px]"
+                            />
                           </div>
                         </div>
                       </Modal.Body>

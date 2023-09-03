@@ -7,6 +7,7 @@ import { FaRegUser } from 'react-icons/fa';
 import { MdOutlineDangerous } from 'react-icons/md';
 import { HiOutlineUserGroup } from 'react-icons/hi';
 import { AiOutlineAlert } from 'react-icons/ai';
+import {AiOutlineScan} from 'react-icons/ai';
 import { GrMapLocation } from 'react-icons/gr';
 import { RiPassportLine } from 'react-icons/ri';
 import { BsDatabaseDown } from 'react-icons/bs';
@@ -32,6 +33,7 @@ import {
   LockOutlined,
   UserOutlined,
 } from '@ant-design/icons';
+import PhotoScan from '../photoScan/PhotoScan';
 
 const components = {
   1: <Home></Home>,
@@ -42,10 +44,11 @@ const components = {
   6: <Visitors></Visitors>,
   7: <Alerts></Alerts>,
   8: <GeneratePass></GeneratePass>,
+  9: <PhotoScan></PhotoScan>,
 };
 
 const Main = () => {
-  const [render, updateRender] = useState(8);
+  const [render, updateRender] = useState(1);
 
   const [token, setToken] = useState(false);
 
@@ -195,7 +198,20 @@ const Main = () => {
                     </div>
                   </a>
                 </li>
+                <li>
+                  <a
+                    href="#"
+                    onClick={() => handleMenuClick(9)}
+                    class="flex items-center p-2 text-base font-medium text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                  >
+                    <div className="inline-flex justify-center items-center">
+                      <AiOutlineScan className="h-5 w-5" />
+                      <span class="ml-3">Photo Scan</span>
+                    </div>
+                  </a>
+                </li>
               </ul>
+              
             </div>
           </aside>
           <main class="p-4 bg-[#F9FAFB] md:ml-64 h-auto pt-20">
