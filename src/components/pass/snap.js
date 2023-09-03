@@ -8,6 +8,8 @@ const Snap = () => {
   const [id, setId] = useState(null);
   const [userDetected, setUserDetected] = useState(false);
   const [openModal, setOpenModal] = useState('');
+  const [openModal2, setOpenModal2] = useState('');
+  const props2 = { openModal2 , setOpenModal2};
   const props = { openModal, setOpenModal };
   const [name, setName] = useState(null);
   const [aadhaar, setAadhaar] = useState(null);
@@ -321,10 +323,22 @@ const Snap = () => {
                   userId: resp?.userDetails?._id,
                 });
               }
+              props2.setOpenModal2('placement');
+
             }}
           >
             Generate Pass
           </Button>
+          <Modal
+                position="top-center"
+                show={props2.openModal2 === 'placement'}
+                onClose={() => props2.setOpenModal2(undefined)}
+              >
+                <Modal.Header>Pass Generated Successfully</Modal.Header>
+                <Modal.Body>
+                  <p>Visitor pass has been generated Successfully and visitor has been added to the database.</p>
+                </Modal.Body>
+              </Modal>
         </div>
       </div>
     </>

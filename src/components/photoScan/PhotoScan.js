@@ -72,6 +72,7 @@ const PhotoScan = () => {
                     </>
                 ) : (
                     
+                    
                     <h2 className='text-md'>No user found in database</h2>
                 )}
             </div>
