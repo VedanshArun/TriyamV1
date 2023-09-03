@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import { Button, Modal } from 'flowbite-react';
+import { Button, Modal, Badge } from 'flowbite-react';
 import Datepicker from 'tailwind-datepicker-react';
 import Webcam from 'react-webcam';
 import api from '../../api';
@@ -9,7 +9,7 @@ const Snap = () => {
   const [userDetected, setUserDetected] = useState(false);
   const [openModal, setOpenModal] = useState('');
   const [openModal2, setOpenModal2] = useState('');
-  const props2 = { openModal2 , setOpenModal2};
+  const props2 = { openModal2, setOpenModal2 };
   const props = { openModal, setOpenModal };
   const [name, setName] = useState(null);
   const [aadhaar, setAadhaar] = useState(null);
@@ -159,6 +159,22 @@ const Snap = () => {
       ) : (
         <></>
       )}
+      {type !== 'VISITOR' && type ? (
+        <div class="flex flex-col justify-center items-center">
+          {type === 'BLACKLISTED' ? (
+            <Badge className="text-lg" color="failure">
+              This user is BLACKLISTED!
+            </Badge>
+          ) : (
+            <Badge className="text-lg" color="indigo">
+              This user is an EMPLOYEE! Let him pass.
+            </Badge>
+          )}
+        </div>
+      ) : (
+        <></>
+      )}
+
       <div class="justify-center items-center m-20 bg-white p-20 grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
         <div class="sm:col-span-3">
           <label
@@ -324,21 +340,23 @@ const Snap = () => {
                 });
               }
               props2.setOpenModal2('placement');
-
             }}
           >
             Generate Pass
           </Button>
           <Modal
-                position="top-center"
-                show={props2.openModal2 === 'placement'}
-                onClose={() => props2.setOpenModal2(undefined)}
-              >
-                <Modal.Header>Pass Generated Successfully</Modal.Header>
-                <Modal.Body>
-                  <p>Visitor pass has been generated Successfully and visitor has been added to the database.</p>
-                </Modal.Body>
-              </Modal>
+            position="top-center"
+            show={props2.openModal2 === 'placement'}
+            onClose={() => props2.setOpenModal2(undefined)}
+          >
+            <Modal.Header>Pass Generated Successfully</Modal.Header>
+            <Modal.Body>
+              <p>
+                Visitor pass has been generated Successfully and visitor has
+                been added to the database.
+              </p>
+            </Modal.Body>
+          </Modal>
         </div>
       </div>
     </>

@@ -7,7 +7,6 @@ let player = null;
 let player2 = null;
 
 const Cameras = () => {
-  
   const [openModal, setOpenModal] = useState('');
   const [openModal2, setOpenModal2] = useState('');
   const [previewRtsp, setPreviewRtsp] = useState(null);
@@ -22,6 +21,7 @@ const Cameras = () => {
   const [password, setPassword] = useState('');
   const [rtspLinks, setRtspLinks] = useState([]);
   const [zones, setZones] = useState([]);
+  const [manualRtsp, setManualRtsp] = useState(false);
   const [cameras, setCameras] = useState([]);
   const [startPreview, setStartPreview] = useState(false);
   const canvasRef = useRef(null);
@@ -257,7 +257,14 @@ const Cameras = () => {
                           <Button color="gray" onClick={() => setScanNew(true)}>
                             Scan RTSPs
                           </Button>
-                          {scanNew ? (
+                          <Button
+                            color="gray"
+                            className="ml-4"
+                            onClick={() => setManualRtsp(true)}
+                          >
+                            Manual RTSPs
+                          </Button>
+                          {scanNew || manualRtsp ? (
                             <>
                               <Button
                                 color="gray"
@@ -266,6 +273,7 @@ const Cameras = () => {
                                   setScanNew(false);
                                   setUsername(null);
                                   setPassword(null);
+                                  setManualRtsp(false);
                                 }}
                               >
                                 Cancel
@@ -336,28 +344,53 @@ const Cameras = () => {
                       ) : (
                         <></>
                       )}
-                      <div class="sm:col-span-6">
-                        <label
-                          for="category"
-                          class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                          Select RTSP Link
-                        </label>
-                        <select
-                          id="rtsp"
-                          onChange={(data) => {
-                            console.log(canvasRef);
-                            console.log('........');
-                            startStream(data.target.value);
-                            setCurrentRtspLink(data.target.value);
-                          }}
-                          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        >
-                          {rtspLinks.map((link) => {
-                            return <option value={link}>{link}</option>;
-                          })}
-                        </select>
-                      </div>
+                      {manualRtsp ? (
+                        <div class="sm:col-span-6">
+                          <label
+                            for="name"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Enter RTSP Link
+                          </label>
+                          <input
+                            type="text"
+                            name="cameraName"
+                            id="cameraName"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Enter Description"
+                            required=""
+                            onChange={(data) => {
+                              console.log(canvasRef);
+                              console.log('........');
+                              startStream(data.target.value);
+                              setCurrentRtspLink(data.target.value);
+                            }}
+                          ></input>
+                        </div>
+                      ) : (
+                        <div class="sm:col-span-6">
+                          <label
+                            for="category"
+                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                          >
+                            Select RTSP Link
+                          </label>
+                          <select
+                            id="rtsp"
+                            onChange={(data) => {
+                              console.log(canvasRef);
+                              console.log('........');
+                              startStream(data.target.value);
+                              setCurrentRtspLink(data.target.value);
+                            }}
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                          >
+                            {rtspLinks.map((link) => {
+                              return <option value={link}>{link}</option>;
+                            })}
+                          </select>
+                        </div>
+                      )}
 
                       <div class="sm:col-span-6">
                         <label
@@ -493,7 +526,7 @@ const Cameras = () => {
                                 return <option value={link}>{link}</option>;
                               })}
                             </select>
-                          </div>    
+                          </div>
                           <div class="sm:col-span-6">
                             <canvas
                               id="canvas"

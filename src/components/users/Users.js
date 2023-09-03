@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Button, Modal, FileInput, Label, input } from 'flowbite-react';
 import { Dropdown } from 'flowbite-react';
-import { MultiSelect } from "react-multi-select-component";
+import { MultiSelect } from 'react-multi-select-component';
 import api from '../../api';
-const options = [] ; 
+const options = [];
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -135,7 +135,7 @@ const Users = () => {
                           Snap
                         </Button>
                     </div> */}
-                    <div class="sm:col-span-3">
+                    <div class="sm:col-span-6">
                       <label
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
                         for="file_input"
@@ -152,6 +152,8 @@ const Users = () => {
                           // console.log(file);
                         }}
                       ></input>
+                    </div>
+                    <div class="sm:col-span-3">
                       <label
                         for="name"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"

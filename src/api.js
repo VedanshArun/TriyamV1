@@ -61,6 +61,20 @@ export default {
     return res.data;
   },
 
+  detectFacesDirect: async function ({ imgSrc }) {
+    const formData = new FormData();
+    formData.append('image', imgSrc);
+    const token = localStorage.getItem('token');
+    const API_URL = `${baseUrl}/admin/detect-faces`;
+    let res = await fetch(API_URL, {
+      method: 'POST',
+      body: formData,
+      headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
+    });
+    res = await res.json();
+    return res.data;
+  },
+
   getRtspUrls: async function () {
     let resp = await apicall({
       url: `${baseUrl}/admin/rtsp/links`,
