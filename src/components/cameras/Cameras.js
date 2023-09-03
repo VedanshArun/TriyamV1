@@ -22,13 +22,17 @@ const Cameras = () => {
   const [rtspLinks, setRtspLinks] = useState([]);
   const [zones, setZones] = useState([]);
   const [cameras, setCameras] = useState([]);
+  const [startPreview, setStartPreview] = useState(false);
   const canvasRef = useRef(null);
   const canvasRef2 = useRef(null);
 
   const getZones = async () => {
     const data = await api.fetchZones();
     setZones(
-      data.map((zone) => {
+      data.map((zone, index) => {
+        if (index == 0) {
+          setCurrentZone(zone._id);
+        }
         return {
           zoneID: zone._id,
           name: zone.name,
@@ -39,6 +43,9 @@ const Cameras = () => {
 
   const getRtspLinks = async () => {
     const data = await api.getRtspUrls();
+    if (data && data.length) {
+      setCurrentRtspLink(data[0]);
+    }
     setRtspLinks(
       data.map((val) => {
         return val;
@@ -48,6 +55,9 @@ const Cameras = () => {
 
   const scanRtspLinks = async () => {
     const data = await api.scanRtspLinks({ username, password });
+    if (data && data.length) {
+      setCurrentRtspLink(data[0]);
+    }
     setRtspLinks(
       data.map((val) => {
         return val;
@@ -171,7 +181,7 @@ const Cameras = () => {
                   onClick={() => {
                     getRtspLinks();
                     getZones();
-                    props.setOpenModal('default');
+                    props.setOpenModal('placement');
                   }}
                   type="button"
                   class="flex items-center justify-center px-2 text-sm font-medium text-white rounded-lg bg-blue-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800"
@@ -192,7 +202,8 @@ const Cameras = () => {
                   Add new camera
                 </Button>
                 <Modal
-                  show={props.openModal === 'default'}
+                  position="top-center"
+                  show={props.openModal === 'placement'}
                   onClose={() => props.setOpenModal(undefined)}
                 >
                   <Modal.Header>Add a new camera</Modal.Header>
@@ -226,11 +237,13 @@ const Cameras = () => {
                           id="category"
                           defaultValue={''}
                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                          onChange={(data) => setCurrentZone(data.target.value)}
+                          onChange={(data) => {
+                            setCurrentZone(data.target.value);
+                          }}
                         >
                           {zones.map((zone) => {
                             return (
-                              <option selected="" value={zone.name}>
+                              <option selected="" value={zone.zoneID}>
                                 {zone.name}
                               </option>
                             );
@@ -463,7 +476,8 @@ const Cameras = () => {
                               onClick={() => {
                                 console.log(canvasRef2);
                                 console.log('#######');
-                                startStream2(previewRtsp);
+                                setStartPreview(true);
+                                // startStream2(previewRtsp);
                               }}
                             >
                               Start Preview
@@ -480,11 +494,9 @@ const Cameras = () => {
                             </Button>
                           </div>
                           <div class="sm:col-span-6">
-                            <canvas
-                              id="canvas2"
-                              ref={canvasRef2}
-                              className=" w-[300px] h-[300px]"
-                            />
+                            <video width="750" height="500" controls>
+                              <source src="ws://172.20.10.4:5138" />
+                            </video>
                           </div>
                         </div>
                       </Modal.Body>

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
-import { Button, Modal, FileInput, Label } from 'flowbite-react';
+import { Button, Modal, FileInput, Label, input } from 'flowbite-react';
 import { Dropdown } from 'flowbite-react';
 import api from '../../api';
 
@@ -21,6 +21,7 @@ const Users = () => {
   const [zones, setZones] = useState([]);
   const props = { openModal, setOpenModal };
   const props2 = { openModal2, setOpenModal2 };
+  const [file, setFile] = useState(null);
 
   const handleOK = async () => {
     await api.addUser({
@@ -33,7 +34,7 @@ const Users = () => {
       designation: designation,
       email: email,
       zoneIds: zoneIds,
-      image: image,
+      file,
     });
     await loadUsers();
   };
@@ -133,6 +134,22 @@ const Users = () => {
                         </Button>
                     </div> */}
                     <div class="sm:col-span-3">
+                      <label
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                        for="file_input"
+                      >
+                        Upload file
+                      </label>
+                      <input
+                        class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                        id="file_input"
+                        type="file"
+                        onChange={(value) => {
+                          console.log(value);
+                          setFile(value?.target?.files[0]);
+                          console.log(file);
+                        }}
+                      ></input>
                       <label
                         for="name"
                         class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -278,8 +295,10 @@ const Users = () => {
                 <Modal.Footer>
                   <Button
                     className="bg-blue-700"
-                    onClick={() => {
+                    onClick={async () => {
                       props.setOpenModal(undefined);
+                      await handleOK();
+                      loadUsers();
                     }}
                   >
                     Add

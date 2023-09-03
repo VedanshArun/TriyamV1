@@ -2,7 +2,7 @@
 /* eslint-disable eqeqeq */
 // const baseUrl =
 //   'https://948e-2405-201-4028-5811-9066-1182-e5c-b4b3.ngrok-free.app';
-const baseUrl = 'http://172.20.10.4:3000';
+const baseUrl = 'http://192.168.1.2:3000';
 // const baseUrl = 'https://ecb7-110-224-226-69.ngrok-free.app';
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -140,15 +140,23 @@ export default {
     zoneIds,
     email,
     designation,
+    file,
   }) => {
-    const base64 = imgSrc; // Place your base64 url here.
-    console.log(base64);
-    let blob = await fetch(base64);
-    blob = await blob.blob();
-    console.log(blob);
+    console.log(file);
     const formData = new FormData();
-    const file = new File([blob], 'filename.jpeg');
-    formData.append('image', file);
+    if (imgSrc) {
+      console.log('>>>>>>>>>>>');
+      const base64 = imgSrc; // Place your base64 url here.
+      console.log(base64);
+      let blob = await fetch(base64);
+      blob = await blob.blob();
+      console.log(blob);
+      const file = new File([blob], 'filename.jpeg');
+      formData.append('image', file);
+    } else {
+      formData.append('image', file);
+    }
+
     formData.append('type', type);
     formData.append('name', name);
     formData.append('designation', designation);

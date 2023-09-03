@@ -21,7 +21,7 @@ const Snap = () => {
   const webcamRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [show, setShow] = useState(false);
-
+  const [type, setType] = useState(null);
   const handleClose = (state) => {
     setShow(state);
   };
@@ -75,6 +75,10 @@ const Snap = () => {
       setVehicle(fetchedFaces[0].vehicles[0]?.vehicleNumber);
       setVisitingOfficer(fetchedFaces[0].gatePasses[0]?.visitingUsers[0]);
       setAddress(fetchedFaces[0].address);
+      setType(fetchedFaces[0].type);
+      if (fetchedFaces[0].gatePasses.length !== 0) {
+        setExpiryDate(fetchedFaces[0].gatePasses[0].expiryDate);
+      }
     }
   };
 
@@ -94,7 +98,7 @@ const Snap = () => {
           show={props.openModal === 'default'}
           onClose={() => props.setOpenModal(undefined)}
         >
-          <Modal.Header>Add a new camera</Modal.Header>
+          <Modal.Header>Take Image of the Visitor</Modal.Header>
           <Modal.Body>
             <div className="container">
               {imgSrc ? (
@@ -153,7 +157,7 @@ const Snap = () => {
       ) : (
         <></>
       )}
-      <div class="  justify-center items-center m-20 bg-white p-20 grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
+      <div class="justify-center items-center m-20 bg-white p-20 grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
         <div class="sm:col-span-3">
           <label
             for="name"
