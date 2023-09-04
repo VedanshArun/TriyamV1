@@ -30,7 +30,7 @@ const PhotoScan = () => {
         setNumber(fetchedFaces[0].mobile);
         setAddress(fetchedFaces[0].address);
         setCompany(fetchedFaces[0].gatePasses[0]?.companyName);
-        setLastVisited(fetchedFaces[0].gatePasses[0]?.expiryDate);
+        setLastVisited(fetchedFaces[0].gatePasses[0]?.createdAt);
         setVehicle(fetchedFaces[0].vehicles[0]?.vehicleNumber);
         setImages(fetchedFaces[0].userImage);
       } else {

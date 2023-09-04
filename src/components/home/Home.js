@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Button, Modal } from 'flowbite-react';
 import Webcam from 'react-webcam';
