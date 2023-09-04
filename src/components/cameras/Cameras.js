@@ -12,6 +12,7 @@ const Cameras = () => {
   const [previewRtsp, setPreviewRtsp] = useState(null);
   const props2 = { openModal2, setOpenModal2 };
   const props = { openModal, setOpenModal };
+  const [enableIntrusion, setEnableIntrusion] = useState(false);
   const [scanNew, setScanNew] = useState(false);
   const [camName, setCamName] = useState(null);
   const [currentZone, setCurrentZone] = useState(null);
@@ -76,6 +77,7 @@ const Cameras = () => {
           description: camera.description,
           rtsplink: camera.rtspUrl,
           zoneIDs: camera.zoneId,
+          intrusionDetection: camera.intrusionDetection,
         };
       })
     );
@@ -466,12 +468,15 @@ const Cameras = () => {
                     Zone IDS
                   </th>
                   <th scope="col" className="px-2 py-3">
+                    Intrusion
+                  </th>
+                  <th scope="col" className="px-2 py-3">
                     Preview
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {cameras.map((camera) => (
+                {cameras.map((camera, index) => (
                   <>
                     <tr class="border-b dark:border-gray-700">
                       <th
@@ -483,15 +488,40 @@ const Cameras = () => {
                       <td class="px-2 py-3">{camera.description}</td>
                       <td class="px-2 py-3">{camera.rtsplink}</td>
                       <td class="px-4 py-3">{camera.zoneIDs}</td>
+                      <td class="px-4 py-3">
+                        <div>
+                          <label className="inline-flex relative items-center mr-5 cursor-pointer">
+                            <input
+                              type="checkbox"
+                              className="sr-only peer"
+                              checked={camera.intrusionDetection}
+                              readOnly
+                            />
+                            <div
+                              onClick={async () => {
+                                await api.updateFeed({
+                                  updateData: {
+                                    intrusionDetection:
+                                      !camera.intrusionDetection,
+                                  },
+                                  feedId: camera.cameraID,
+                                });
+                                await loadCameras();
+                              }}
+                              className="w-11 h-6 bg-gray-200 rounded-full peer  peer-focus:ring-green-300  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"
+                            ></div>
+                          </label>
+                        </div>
+                      </td>
                       <td className="px-4 py-3">
                         <Button
                           color="gray"
                           onClick={async () => {
                             console.log(canvasRef);
                             console.log('.........');
-                            console.log(camera.rtsplink);
-                            setPreviewRtsp(camera.rtsplink);
-                            props2.setOpenModal2('default');
+                            startStream(camera.rtsplink);
+                            setCurrentRtspLink(camera.rtsplink);
+                            props2.setOpenModal2(`default ${index}`);
                           }}
                         >
                           Preview
@@ -499,34 +529,12 @@ const Cameras = () => {
                       </td>
                     </tr>
                     <Modal
-                      show={props2.openModal2 === 'default'}
+                      show={props2.openModal2 === `default ${index}`}
                       onClose={() => props2.setOpenModal2(undefined)}
                     >
                       <Modal.Header>Camera Preview</Modal.Header>
                       <Modal.Body>
                         <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
-                          <div class="sm:col-span-6">
-                            <label
-                              for="category"
-                              class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
-                              Select RTSP Link
-                            </label>
-                            <select
-                              id="rtsp"
-                              onChange={(data) => {
-                                console.log(canvasRef);
-                                console.log('........');
-                                startStream(data.target.value);
-                                setCurrentRtspLink(data.target.value);
-                              }}
-                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            >
-                              {rtspLinks.map((link) => {
-                                return <option value={link}>{link}</option>;
-                              })}
-                            </select>
-                          </div>
                           <div class="sm:col-span-6">
                             <canvas
                               id="canvas"

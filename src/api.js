@@ -112,6 +112,14 @@ export default {
     });
     return resp.data;
   },
+  updateFeed: async function ({ updateData, feedId }) {
+    let resp = await apicall({
+      url: `${baseUrl}/admin/feed`,
+      method: 'PUT',
+      data: { updateData, feedId },
+    });
+    return resp.data;
+  },
 
   addFeed: async function ({ rtspUrl, zoneId, cameraName, description }) {
     let resp = await apicall({

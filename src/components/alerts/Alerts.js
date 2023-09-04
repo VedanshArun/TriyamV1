@@ -1,28 +1,27 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import api from '../../api';
-import {Button , Modal} from 'flowbite-react';
-
+import { Button, Modal } from 'flowbite-react';
 
 const Alerts = () => {
-    const [alerts, setAlerts] = useState([]);
-    const [openModal, setOpenModal] = useState('');
-    const props = { openModal, setOpenModal };
-    const [url,setUrl] = useState(null);
-    const loadAlerts = async () => {
+  const [alerts, setAlerts] = useState([]);
+  const [openModal, setOpenModal] = useState('');
+  const props = { openModal, setOpenModal };
+  const [url, setUrl] = useState(null);
+  const loadAlerts = async () => {
     const fetchedAlerts = await api.fetchAlerts();
-    
+
     setAlerts(
       fetchedAlerts.map((alert) => {
         return {
-            alertID: alert._id,
-            title : alert.alert.title , 
-            body : alert.alert.body , 
-            url : alert.url , 
-            cameraName: alert.cameraName,
-            label: alert.label,
-            detectedUserID: alert.detectedUserId,
-            type: alert.type,
+          alertID: alert._id,
+          title: alert.alert.title,
+          body: alert.alert.body,
+          url: alert.url,
+          cameraName: alert.cameraName,
+          label: alert.label,
+          detectedUserID: alert.detectedUserId,
+          type: alert.type,
         };
       })
     );
@@ -113,61 +112,62 @@ const Alerts = () => {
                   </th>
                 </tr>
               </thead>
-              
+
               <tbody>
-                {alerts.map((alert) => (
-                <>
+                {alerts.map((alert, index) => (
+                  <>
                     <tr class="border-b dark:border-gray-700">
-                        <th
+                      <th
                         scope="row"
                         class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                        >
+                      >
                         {alert.alertID}
-                        </th>
-                        <td class="px-2 py-3">{alert.body}</td>
-                        <td class="px-2 py-3">{alert.cameraName}</td>
-                        <td class="px-4 py-3">{alert.type}</td>
-                        <td class="px-4 py-3 flex items-center">
+                      </th>
+                      <td class="px-2 py-3">{alert.body}</td>
+                      <td class="px-2 py-3">{alert.cameraName}</td>
+                      <td class="px-4 py-3">{alert.type}</td>
+                      <td class="px-4 py-3 flex items-center">
                         <Button
-                            color = "gray"
-                            onClick={() => {
+                          color="gray"
+                          onClick={() => {
                             setUrl(alert.url);
-                            props.setOpenModal('default');               
-                        }}
+                            props.setOpenModal(`default ${index}`);
+                          }}
                         >
-                            Preview
+                          Preview
                         </Button>
-                        
-                        </td>
+                      </td>
                     </tr>
-                    <Modal show={props.openModal === 'default'}
-                        onClose={() => props.setOpenModal(undefined)}>
-                          <Modal.Header>Alert Preview</Modal.Header>
-                        <Modal.Body>
-                            <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
-                              <div class="sm:col-span-6">
-                                <img src={url} width={600} height={600} alt='alert preview photo'/>
-                              </div>
-                              
-                            </div>
-                        </Modal.Body>
-                        <Modal.Footer>
-                    
-                    <Button
-                      color="gray"
-                      onClick={() => {
-                        
-                        props.setOpenModal(undefined);
-                      }}
+                    <Modal
+                      show={props.openModal === `default ${index}`}
+                      onClose={() => props.setOpenModal(undefined)}
                     >
-                      Cancel
-                    </Button>
-                  </Modal.Footer>
-
+                      <Modal.Header>Alert Preview</Modal.Header>
+                      <Modal.Body>
+                        <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
+                          <div class="sm:col-span-6">
+                            <img
+                              src={url}
+                              width={600}
+                              height={600}
+                              alt="alert preview photo"
+                            />
+                          </div>
+                        </div>
+                      </Modal.Body>
+                      <Modal.Footer>
+                        <Button
+                          color="gray"
+                          onClick={() => {
+                            props.setOpenModal(undefined);
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </Modal.Footer>
                     </Modal>
                   </>
                 ))}
-                
               </tbody>
             </table>
           </div>
@@ -214,7 +214,6 @@ const Alerts = () => {
                 </nav> */}
         </div>
       </div>
-      
     </section>
   );
 };

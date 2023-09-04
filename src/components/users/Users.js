@@ -462,7 +462,7 @@ const Users = () => {
                             <Dropdown.Item>
                               <button
                                 onClick={() => {
-                                  props2.setOpenModal2('placement');
+                                  props2.setOpenModal2(`placement ${index}`);
                                 }}
                               >
                                 View Details
@@ -473,7 +473,7 @@ const Users = () => {
                       </tr>
                       <Modal
                         position="top-center"
-                        show={props2.openModal2 === 'placement'}
+                        show={props2.openModal2 === `placement ${index}`}
                         onClose={() => props2.setOpenModal2(undefined)}
                       >
                         <Modal.Header>User Details</Modal.Header>
