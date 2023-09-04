@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
@@ -5,21 +6,19 @@ import { Button, Modal, FileInput, Label, input } from 'flowbite-react';
 import { Dropdown } from 'flowbite-react';
 import { MultiSelect } from 'react-multi-select-component';
 import api from '../../api';
-const options = [];
 
 const Users = () => {
   const [users, setUsers] = useState([]);
   const [openModal, setOpenModal] = useState('');
   const [openModal2, setOpenModal2] = useState('');
-  const [name, setName] = useState('');
-  const [mobile, setMobile] = useState('');
-  const [image, setImage] = useState(null);
-  const [zoneIds, setZoneIds] = useState([]);
-  const [aadhaarNumber, setAadhaar] = useState('');
-  const [email, setEmail] = useState('');
-  const [vehicles, setVehicles] = useState([]);
-  const [address, setAddress] = useState('');
-  const [designation, setDesignation] = useState('');
+  const [currentName, setCurrentName] = useState('');
+  const [currentMobile, setCurrentMobile] = useState('');
+  const [currentZoneIds, setCurrentZoneIds] = useState([]);
+  const [currentAadhaarNumber, setCurrentAadhaar] = useState('');
+  const [currentEmail, setCurrentEmail] = useState('');
+  const [currentVehicles, setCurrentVehicles] = useState([]);
+  const [currentAddress, setCurrentAddress] = useState('');
+  const [currentDesignation, setCurrentDesignation] = useState('');
   const [zones, setZones] = useState([]);
   const props = { openModal, setOpenModal };
   const props2 = { openModal2, setOpenModal2 };
@@ -27,15 +26,15 @@ const Users = () => {
 
   const handleOK = async () => {
     await api.addUser({
-      name: name,
-      address: address,
-      mobile: mobile,
+      name: currentName,
+      address: currentAddress,
+      mobile: currentMobile,
       type: 'EMPLOYEE',
-      vehicles: [{ vehicleNumber: vehicles }],
-      aadhaarNumber: aadhaarNumber,
-      designation: designation,
-      email: email,
-      zoneIds: zoneIds,
+      vehicles: [{ vehicleNumber: currentVehicles }],
+      aadhaarNumber: currentAadhaarNumber,
+      designation: currentDesignation,
+      email: currentEmail,
+      zoneIds: currentZoneIds,
       file,
     });
     await loadUsers();
@@ -167,7 +166,7 @@ const Users = () => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Enter name of the user"
                         required=""
-                        onChange={(data) => setName(data.target.value)}
+                        onChange={(data) => setCurrentName(data.target.value)}
                       ></input>
                     </div>
                     <div class="sm:col-span-3">
@@ -184,7 +183,9 @@ const Users = () => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Enter aadhaar number"
                         required=""
-                        onChange={(data) => setAadhaar(data.target.value)}
+                        onChange={(data) =>
+                          setCurrentAadhaar(data.target.value)
+                        }
                       ></input>
                     </div>
                     <div class="sm:col-span-3">
@@ -201,7 +202,7 @@ const Users = () => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="mobile number"
                         required=""
-                        onChange={(data) => setMobile(data.target.value)}
+                        onChange={(data) => setCurrentMobile(data.target.value)}
                       ></input>
                     </div>
                     <div class="sm:col-span-3">
@@ -218,7 +219,7 @@ const Users = () => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Email address"
                         required=""
-                        onChange={(data) => setEmail(data.target.value)}
+                        onChange={(data) => setCurrentEmail(data.target.value)}
                       ></input>
                     </div>
                     <div class="sm:col-span-3">
@@ -235,7 +236,9 @@ const Users = () => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="vehicle number"
                         required=""
-                        onChange={(data) => setVehicles(data.target.value)}
+                        onChange={(data) =>
+                          setCurrentVehicles(data.target.value)
+                        }
                       ></input>
                     </div>
                     <div class="sm:col-span-3">
@@ -252,7 +255,9 @@ const Users = () => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Designation"
                         required=""
-                        onChange={(data) => setDesignation(data.target.value)}
+                        onChange={(data) =>
+                          setCurrentDesignation(data.target.value)
+                        }
                       ></input>
                     </div>
                     <div class="sm:col-span-6">
@@ -266,11 +271,13 @@ const Users = () => {
                         id="category"
                         defaultValue={''}
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                        onChange={(data) => setZoneIds(data.target.value)}
+                        onChange={(data) =>
+                          setCurrentZoneIds(data.target.value)
+                        }
                       >
                         {zones.map((zone) => {
                           return (
-                            <option selected="" value={zone.name}>
+                            <option selected="" value={zone.zoneID}>
                               {zone.name}
                             </option>
                           );
@@ -291,7 +298,9 @@ const Users = () => {
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                         placeholder="Enter address of the user"
                         required=""
-                        onChange={(data) => setAddress(data.target.value)}
+                        onChange={(data) =>
+                          setCurrentAddress(data.target.value)
+                        }
                       ></input>
                     </div>
                   </div>
@@ -380,7 +389,7 @@ const Users = () => {
                           <Dropdown.Item>
                             <button
                               onClick={() => {
-                                props2.setOpenModal2('placement');
+                                props2.setOpenModal2('default');
                               }}
                             >
                               View Details
@@ -390,8 +399,7 @@ const Users = () => {
                       </td>
                     </tr>
                     <Modal
-                      position="top-center"
-                      show={props2.openModal2 === 'placement'}
+                      show={props2.openModal2 === 'default'}
                       onClose={() => props2.setOpenModal2(undefined)}
                     >
                       <Modal.Header>User Details</Modal.Header>
