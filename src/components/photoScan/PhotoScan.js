@@ -16,12 +16,14 @@ const PhotoScan = () => {
   const [images, setImages] = useState(null);
   const [address, setAddress] = useState(null);
   const [lastVisited, setLastVisited] = useState(null);
+  const [userDetails, setUserDetails] = useState([]);
   const [type, setType] = useState(null);
 
   const loadFaces = async (imgSrc) => {
     try {
       const fetchedFaces = await api.detectFacesDirect({ imgSrc });
       if (fetchedFaces && fetchedFaces.length) {
+        setUserDetails(fetchedFaces);
         setUserId(fetchedFaces[0].userId);
         setUserDetected(true);
         setName(fetchedFaces[0].label);
@@ -81,7 +83,75 @@ const PhotoScan = () => {
           {userDetected ? (
             <>
               <h1 className="text-xl mb-10">User Details</h1>
-              <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
+              {userDetails.map((user, index) => {
+                return (
+                  <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
+                    <div class="sm:col-span-3 justify-center items-center w-full md:h-full">
+                      <div class="w-full max-w-xl h-full md:h-auto">
+                        <div class="bg-white rounded-lg ">
+                          <div class="flex justify-between mb-4 rounded-t sm:mb-5">
+                            <div class="text-lg text-gray-900 md:text-xl dark:text-white">
+                              <h3 class="font-semibold ">{user.name}</h3>
+                              <p class="text-gray-500 text-sm">
+                                User ID : {user._id}
+                              </p>
+                              {user.type === 'BLACKLISTED' ? (
+                                <Badge color="failure">{user.type}</Badge>
+                              ) : (
+                                <Badge color="indigo">{user.type}</Badge>
+                              )}
+                            </div>
+                          </div>
+                          <dl className="mt-5">
+                            <dt class="mb-2 font-semibold leading-none text-xl text-gray-900 dark:text-white">
+                              Details
+                            </dt>
+                            <dd class="mt-5 mb-2 font-light text-gray-500  dark:text-gray-400">
+                              <span className=" font-medium text-[#000000]">
+                                Phone Number :{' '}
+                              </span>
+                              {user.mobile}
+                            </dd>
+
+                            <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                              <span className=" font-medium text-[#000000]">
+                                Aadhaar :{' '}
+                              </span>
+                              {user.aadhaarNumber}
+                            </dd>
+                            <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                              <span className=" font-medium text-[#000000]">
+                                Address :{' '}
+                              </span>
+                              {user.address}
+                            </dd>
+                            <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                              <span className=" font-medium text-[#000000]">
+                                Designation :{' '}
+                              </span>
+                              {user.designation}
+                            </dd>
+                            <dd class="mb-2 font-light text-gray-500  dark:text-gray-400">
+                              <span className=" font-medium text-[#000000]">
+                                Last Visit to Facility :{' '}
+                              </span>
+                              {user.gatePasses[0]?.expiryDate}
+                            </dd>
+                          </dl>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="sm:col-span-3 justify-center items-center w-full md:h-full">
+                      <img
+                        src={user.userImage}
+                        alt="user image"
+                        className="w-[300px] h-[400px] object-cover"
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+              {/* <div class="grid gap-4 mb-4 sm:grid-cols-6 sm:gap-6 sm:mb-5">
                 <div class="sm:col-span-3 justify-center items-center w-full md:h-full">
                   <div class="w-full max-w-xl h-full md:h-auto">
                     <div class="bg-white rounded-lg ">
@@ -144,7 +214,7 @@ const PhotoScan = () => {
                     className="w-[300px] h-[400px] object-cover"
                   />
                 </div>
-              </div>
+              </div> */}
             </>
           ) : (
             <h2 className="text-md">No user found in database</h2>
