@@ -22,6 +22,7 @@ const Alerts = () => {
           label: alert.label,
           detectedUserID: alert.detectedUserId,
           type: alert.type,
+          createdAt : alert.createdAt,
         };
       })
     );
@@ -96,16 +97,16 @@ const Alerts = () => {
               <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" class="px-4 py-3">
-                    alert id
+                    Camera
                   </th>
                   <th scope="col" class="px-2 py-3">
                     message
                   </th>
                   <th scope="col" class="px-2 py-3">
-                    camera
+                    type
                   </th>
                   <th scope="col" class="px-2 py-3">
-                    type
+                    Time
                   </th>
                   <th scope="col" class="px-2 py-3">
                     preview
@@ -119,14 +120,14 @@ const Alerts = () => {
                     <tr class="border-b dark:border-gray-700">
                       <th
                         scope="row"
-                        class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        class="px-4 py-3 font-medium text-xs text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        {alert.alertID}
+                        {alert.cameraName}
                       </th>
-                      <td class="px-2 py-3">{alert.body}</td>
-                      <td class="px-2 py-3">{alert.cameraName}</td>
-                      <td class="px-4 py-3">{alert.type}</td>
-                      <td class="px-4 py-3 flex items-center">
+                      <td class="px-2 py-3 text-xs">{alert.body}</td>
+                      <td class="px-2 py-3 text-xs">{alert.type}</td>
+                      <td class="px-4 py-3 text-xs">{new Date(alert.createdAt).toLocaleString(undefined,{timeZone : 'Asia/Kolkata' })}</td>
+                      <td class="px-4 py-3 flex items-center text-xs">
                         <Button
                           color="gray"
                           onClick={() => {
